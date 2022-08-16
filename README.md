@@ -1,64 +1,41 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+## Roles and Permissions
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This application comes with a custom, built-in permissions and roles system. This system allows you to assign roles and permissions to users. Users will be have all permissions that are either directly assigned, or assigned via a role.
 
-## About Laravel
+All functions can take either a string containing the name of the permission/role, or the Permission/Role class. An array can contain all strings, all classes, or a mix of both.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+```
+// Checking permissions
+$user->hasPermission('create-budget'); // Check if the user has the specified permission
+$user->hasAnyPermission(['create-budget', 'delete-budget', ...]); // Check if the user has one of the following permissions
+$user->hasAllPermissions(['create-budget', 'delete-budget', ...]); // Check if the user has all of the following permissions
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+// Assigning permissions
+$user->assignPermission('create-budget'); // Assign the following permission to the user, even if their role doesn't allow it
+$user->assignPermissions(['create-budget', 'delete-budget', ...]); // Assign all the following permissions to the user, even if their role doesn't allow it
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+// Revoking permissions
+$user->assignPermission('create-budget'); // Remove this direct permission (user will still have permission if their role allows it)
+$user->assignPermissions(['create-budget', 'delete-budget', ...]); // Remove these direct permissions (user will still have permission if their role allows it)
 
-## Learning Laravel
+// Checking roles
+$user->hasRole('admin'); // Check if the user has the specified role
+$user->hasAnyRole(['admin', 'editor', ...]); // Check if the user has one of the following roles
+$user->hasAllRoles(['admin', 'editor', ...]); // Check if the user has all of the following roles
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+// Assigning roles
+$user->assignRole('admin'); // Assign the following role to the user
+$user->assignRoles(['admin', 'editor', ...]); // Assign all the following roles to the user
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+// Revoking roles
+$user->removeRole('admin'); // Remove this role
+$user->removeRoles(['admin', 'editor', ...]); // Remove these roles
 
-## Laravel Sponsors
+// Assigning permissions to roles
+$role->assignPermission('create-budget'); // Assign the following permission to the role
+$role->assignPermissions(['create-budget', 'delete-budget', ...]); // Assign all the following permissions to the role
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+// Revoking permissions from roles
+$role->removePermission('create-budget'); // Remove this permission
+$role->removePermissions(['create-budget', 'delete-budget', ...]); // Remove these permissions
+```
