@@ -16,11 +16,13 @@ class RoleSeeder extends Seeder
      */
     public function run()
     {
-        Role::insert([
+        $data = [
             ['name' => 'superadmin'],
             ['name' => 'admin'],
             ['name' => 'free-customer'],
-        ]);
+        ];
+
+        Role::upsert($data, 'name');
 
         $roles = Role::all();
 

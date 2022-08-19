@@ -15,7 +15,7 @@ class PermissionSeeder extends Seeder
      */
     public function run()
     {
-        Permission::insert([
+        $data = [
             // User management
             ['name' => 'create-user'],
             ['name' => 'update-user'],
@@ -48,6 +48,8 @@ class PermissionSeeder extends Seeder
             ['name' => 'show-roles'],
             ['name' => 'assign-roles'],
             ['name' => 'remove-roles'],
-        ]);
+        ];
+
+        Permission::upsert($data, 'name');
     }
 }
