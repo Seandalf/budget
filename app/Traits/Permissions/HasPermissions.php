@@ -28,13 +28,11 @@ trait HasPermissions
             $permission = Permission::whereName($permission)->first();
         }
 
-        if (!$permission) {
-            return false;
-        }
-
-        foreach ($this->permissions as $perm) {
-            if ($perm->id === $permission->id) {
-                return true;
+        if ($permission) {
+            foreach ($this->permissions as $perm) {
+                if ($perm->id === $permission->id) {
+                    return true;
+                }
             }
         }
 
@@ -51,14 +49,12 @@ trait HasPermissions
             $permission = Permission::whereName($permission)->first();
         }
 
-        if (!$permission) {
-            return false;
-        }
-
-        foreach ($this->roles as $role) {
-            foreach ($role->permissions as $perm) {
-                if ($perm->id === $permission->id) {
-                    return true;
+        if ($permission) {
+            foreach ($this->roles as $role) {
+                foreach ($role->permissions as $perm) {
+                    if ($perm->id === $permission->id) {
+                        return true;
+                    }
                 }
             }
         }
@@ -69,11 +65,11 @@ trait HasPermissions
     public function hasAnyPermission(array $permissions): bool
     {
         foreach ($permissions as $permission) {
-            if (!is_string($permission)) {
-                continue;
+            if (!$permission instanceof Permission) {
+                $permission = Permission::whereName($permission)->first();
             }
 
-            if ($this->hasPermission($permission)) {
+            if ($permission && $this->hasPermission($permission)) {
                 return true;
             }
         }
@@ -84,11 +80,11 @@ trait HasPermissions
     public function hasAllPermissions(array $permissions): bool
     {
         foreach ($permissions as $permission) {
-            if (!is_string($permission)) {
-                return false;
+            if (!$permission instanceof Permission) {
+                $permission = Permission::whereName($permission)->first();
             }
 
-            if (!$this->hasPermission($permission)) {
+            if (!$permission || !$this->hasPermission($permission)) {
                 return false;
             }
         }
@@ -119,19 +115,20 @@ trait HasPermissions
             $permission = Permission::whereName($permission)->first();
         }
 
-        if (!$this->hasPermission($permission)) {
-            $this->permissions->attach([$permission->id]);
+        if ($permission && !$this->hasPermission($permission)) {
+            $this->permissions()->attach([$permission->id]);
         }
     }
 
     public function assignPermissions(array $permissions): void
     {
         foreach ($permissions as $permission) {
-            if (!$this->hasPermission($permission)) {
-                if (!$permission instanceof Permission) {
-                    $permission = Permission::whereName($permission)->first();
-                }
-                $this->permissions->attach([$permission->id]);
+            if (!$permission instanceof Permission) {
+                $permission = Permission::whereName($permission)->first();
+            }
+
+            if ($permission && !$this->hasPermission($permission)) {
+                $this->permissions()->attach([$permission->id]);
             }
         }
     }
@@ -142,19 +139,20 @@ trait HasPermissions
             $permission = Permission::whereName($permission)->first();
         }
 
-        if ($this->hasPermission($permission)) {
-            $this->permissions->detach([$permission->id]);
+        if ($permission && $this->hasPermission($permission)) {
+            $this->permissions()->detach([$permission->id]);
         }
     }
 
     public function removePermissions(array $permissions): void
     {
         foreach ($permissions as $permission) {
-            if ($this->hasPermission($permission)) {
-                if (!$permission instanceof Permission) {
-                    $permission = Permission::whereName($permission)->first();
-                }
-                $this->permissions->detach([$permission->id]);
+            if (!$permission instanceof Permission) {
+                $permission = Permission::whereName($permission)->first();
+            }
+
+            if ($permission && $this->hasPermission($permission)) {
+                $this->permissions()->detach([$permission->id]);
             }
         }
     }
@@ -162,7 +160,7 @@ trait HasPermissions
     public function removeAllPermissions(): void
     {
         foreach ($this->permissions as $permission) {
-            $this->permissions->detach([$permission->id]);
+            $this->permissions()->detach([$permission->id]);
         }
     }
 }

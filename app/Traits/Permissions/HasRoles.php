@@ -20,6 +20,10 @@ trait HasRoles
                 $role = Role::whereName($role)->first();
             }
 
+            if (!$role) {
+                return false;
+            }
+
             foreach ($this->roles as $rel_role) {
                 if ($rel_role->id === $role->id) {
                     return true;
@@ -39,6 +43,10 @@ trait HasRoles
                 $role = Role::whereName($role)->first();
             }
 
+            if (!$role) {
+                continue;
+            }
+
             if ($this->hasRole($role)) {
                 return true;
             }
@@ -52,6 +60,10 @@ trait HasRoles
         foreach ($roles as $role) {
             if (!$role instanceof Role) {
                 $role = Role::whereName($role)->first();
+            }
+
+            if (!$role) {
+                return false;
             }
 
             if (!$this->hasRole($role)) {
@@ -68,8 +80,10 @@ trait HasRoles
             $role = Role::whereName($role)->first();
         }
 
-        if (!$this->hasRole($role)) {
-            $this->roles->attach([$role->id]);
+        if ($role) {
+            if (!$this->hasRole($role)) {
+                $this->roles()->attach([$role->id]);
+            }
         }
     }
 
@@ -79,9 +93,13 @@ trait HasRoles
             if (!$role instanceof Role) {
                 $role = Role::whereName($role)->first();
             }
+
+            if (!$role) {
+                continue;
+            }
     
             if (!$this->hasRole($role)) {
-                $this->roles->attach([$role->id]);
+                $this->roles()->attach([$role->id]);
             }
         }
     }
@@ -92,8 +110,10 @@ trait HasRoles
             $role = Role::whereName($role)->first();
         }
 
-        if ($this->hasRole($role)) {
-            $this->roles->detach([$role->id]);
+        if ($role) {
+            if ($this->hasRole($role)) {
+                $this->roles()->detach([$role->id]);
+            }
         }
     }
 
@@ -103,9 +123,13 @@ trait HasRoles
             if (!$role instanceof Role) {
                 $role = Role::whereName($role)->first();
             }
+
+            if (!$role) {
+                continue;
+            }
     
             if ($this->hasRole($role)) {
-                $this->roles->detach([$role->id]);
+                $this->roles()->detach([$role->id]);
             }
         }
     }
@@ -113,7 +137,7 @@ trait HasRoles
     public function removeAllRoles(): void
     {
         foreach ($this->roles as $role) {
-            $this->roles->detach([$role->id]);
+            $this->roles()->detach([$role->id]);
         }
     }
 }

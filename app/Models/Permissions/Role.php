@@ -30,10 +30,12 @@ class Role extends Model
             if (!$permission instanceof Permission) {
                 $permission = Permission::whereName($permission)->first();
             }
-
-            foreach ($this->permissions as $perm) {
-                if ($perm->id === $permission-> id) {
-                    return true;
+                
+            if ($permission) {
+                foreach ($this->permissions as $perm) {
+                    if ($perm->id === $permission-> id) {
+                        return true;
+                    }
                 }
             }
 
@@ -49,8 +51,8 @@ class Role extends Model
             $permission = Permission::whereName($permission)->first();
         }
 
-        if (!$this->hasPermission($permission)) {
-            $this->permissions->attach([$permission->id]);
+        if ($permission && !$this->hasPermission($permission)) {
+            $this->permissions()->attach([$permission->id]);
         }
     }
 
@@ -61,8 +63,8 @@ class Role extends Model
                 $permission = Permission::whereName($permission)->first();
             }
 
-            if (!$this->hasPermission($permission)) {
-                $this->permissions->attach([$permission->id]);
+            if ($permission && !$this->hasPermission($permission)) {
+                $this->permissions()->attach([$permission->id]);
             }
         }
     }
@@ -73,8 +75,8 @@ class Role extends Model
             $permission = Permission::whereName($permission)->first();
         }
 
-        if ($this->hasPermission($permission)) {
-            $this->permissions->detach([$permission->id]);
+        if ($permission && $this->hasPermission($permission)) {
+            $this->permissions()->detach([$permission->id]);
         }
     }
 
@@ -85,8 +87,8 @@ class Role extends Model
                 $permission = Permission::whereName($permission)->first();
             }
 
-            if ($this->hasPermission($permission)) {
-                $this->permissions->detach([$permission->id]);
+            if ($permission && $this->hasPermission($permission)) {
+                $this->permissions()->detach([$permission->id]);
             }
         }
     }

@@ -2,11 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Permission;
-use Illuminate\Http\Request;
+use App\Http\Requests\Permissions\PermissionRequest;
+use App\Models\Permissions\Permission;
+use Exception;
 
 class PermissionController extends Controller
 {
+    /**
+     * Create the controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->authorizeResource(Permission::class, 'permission');
+    }
+    
     /**
      * Display a listing of the resource.
      *
@@ -33,9 +44,14 @@ class PermissionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PermissionRequest $request)
     {
-        //
+        try {
+            $permission = Permission::create($request->validated());
+            return successResponse($permission);
+        } catch (Exception $e) {
+            return errorResponse($e->getMessage(), 'Could not create permission');
+        }
     }
 
     /**
@@ -67,9 +83,14 @@ class PermissionController extends Controller
      * @param  \App\Models\Permission  $permission
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Permission $permission)
+    public function update(PermissionRequest $request, Permission $permission)
     {
-        //
+        try {
+            $permission->update($request->validated());
+            return successResponse($permission);
+        } catch (Exception $e) {
+            return errorResponse($e->getMessage(), 'Could not update permission');
+        }
     }
 
     /**
@@ -80,6 +101,11 @@ class PermissionController extends Controller
      */
     public function destroy(Permission $permission)
     {
-        //
+        try {
+            $permission->delete();
+            return successResponse($permission);
+        } catch (Exception $e) {
+            return errorResponse($e->getMessage(), 'Could not delete permission');
+        }
     }
 }
