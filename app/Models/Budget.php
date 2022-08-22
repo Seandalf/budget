@@ -28,8 +28,8 @@ class Budget extends Model
     ];
 
     protected $casts = [
-        'starts_at' => 'datetime',
-        'active' => 'boolean',
+        'starts_at'       => 'datetime',
+        'active'          => 'boolean',
         'opening_balance' => MoneyCast::class,
         'closing_balance' => MoneyCast::class,
     ];
@@ -45,11 +45,6 @@ class Budget extends Model
         return $this->hasMany(Interval::class);
     }
 
-    public function recurring_transactions(): HasMany
-    {
-        return $this->hasMany(RecurringTransaction::class);
-    }
-
     public function categories(): HasMany
     {
         return $this->hasMany(Category::class);
@@ -63,6 +58,11 @@ class Budget extends Model
     public function group_transactions(): HasManyThrough
     {
         return $this->hasManyThrough(GroupTransaction::class, Interval::class);
+    }
+
+    public function recurring_transactions(): HasMany
+    {
+        return $this->hasMany(RecurringTransaction::class);
     }
 
     public function transactions(): HasManyThrough
