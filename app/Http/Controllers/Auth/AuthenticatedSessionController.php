@@ -37,6 +37,10 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        if (count(Auth::user()->roles) === 0) {
+            return redirect(route('auth.logout'));
+        }
+
         return redirect()->intended(RouteServiceProvider::HOME);
     }
 

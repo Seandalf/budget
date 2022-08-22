@@ -19,6 +19,10 @@ class DatabaseSeeder extends Seeder
         $this->call([
             PermissionSeeder::class,
             RoleSeeder::class,
+            CurrencySeeder::class,
+            TimePeriodSeeder::class,
+            PayeeSeeder::class,
+            CategorySeeder::class,
         ]);
 
         if (config('app.env') !== 'production') {

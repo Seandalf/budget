@@ -52,6 +52,7 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
         Auth::user()->createToken('default');
+        Auth::user()->assignRole('free-customer');
 
         return redirect(RouteServiceProvider::HOME);
     }

@@ -23,6 +23,8 @@ return new class extends Migration
             $table->boolean('verified');
             $table->timestamp('expires_at')->nullable();
             $table->timestamps();
+            
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 
