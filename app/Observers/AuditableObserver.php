@@ -19,7 +19,7 @@ class AuditableObserver
      */
     public function created($model)
     {
-        dd($this->previous);
+        $this->createAuditRecord('created', $model);
     }
 
     /**
@@ -41,7 +41,7 @@ class AuditableObserver
      */
     public function deleted($model)
     {
-        //
+        $this->createAuditRecord('deleted', $model);
     }
 
     /**
@@ -52,7 +52,7 @@ class AuditableObserver
      */
     public function restored($model)
     {
-        //
+        $this->createAuditRecord('restored', $model);
     }
 
     /**
@@ -63,7 +63,7 @@ class AuditableObserver
      */
     public function forceDeleted($model)
     {
-        //
+        $this->createAuditRecord('forceDeleted', $model);
     }
 
     protected function createAuditRecord(string $action, object $model): void
