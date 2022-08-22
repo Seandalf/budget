@@ -16,7 +16,7 @@ class Budget extends Model
     use HasFactory, SoftDeletes, Auditable;
 
     protected $fillable = [
-        'name', 
+        'name',
         'description',
         'opening_balance',
         'closing_balance',

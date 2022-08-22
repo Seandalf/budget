@@ -16,11 +16,11 @@ trait HasRoles
     public function hasRole(Role|string $role): bool
     {
         try {
-            if (!$role instanceof Role) {
+            if (! $role instanceof Role) {
                 $role = Role::whereName($role)->first();
             }
 
-            if (!$role) {
+            if (! $role) {
                 return false;
             }
 
@@ -29,7 +29,7 @@ trait HasRoles
                     return true;
                 }
             }
-            
+
             return false;
         } catch (Exception $e) {
             return false;
@@ -39,11 +39,11 @@ trait HasRoles
     public function hasAnyRole(array $roles): bool
     {
         foreach ($roles as $role) {
-            if (!$role instanceof Role) {
+            if (! $role instanceof Role) {
                 $role = Role::whereName($role)->first();
             }
 
-            if (!$role) {
+            if (! $role) {
                 continue;
             }
 
@@ -58,15 +58,15 @@ trait HasRoles
     public function hasAllRoles(array $roles): bool
     {
         foreach ($roles as $role) {
-            if (!$role instanceof Role) {
+            if (! $role instanceof Role) {
                 $role = Role::whereName($role)->first();
             }
 
-            if (!$role) {
+            if (! $role) {
                 return false;
             }
 
-            if (!$this->hasRole($role)) {
+            if (! $this->hasRole($role)) {
                 return false;
             }
         }
@@ -76,12 +76,12 @@ trait HasRoles
 
     public function assignRole(Role|string $role): void
     {
-        if (!$role instanceof Role) {
+        if (! $role instanceof Role) {
             $role = Role::whereName($role)->first();
         }
 
         if ($role) {
-            if (!$this->hasRole($role)) {
+            if (! $this->hasRole($role)) {
                 $this->roles()->attach([$role->id]);
             }
         }
@@ -90,15 +90,15 @@ trait HasRoles
     public function assignRoles(array $roles): void
     {
         foreach ($roles as $role) {
-            if (!$role instanceof Role) {
+            if (! $role instanceof Role) {
                 $role = Role::whereName($role)->first();
             }
 
-            if (!$role) {
+            if (! $role) {
                 continue;
             }
-    
-            if (!$this->hasRole($role)) {
+
+            if (! $this->hasRole($role)) {
                 $this->roles()->attach([$role->id]);
             }
         }
@@ -106,7 +106,7 @@ trait HasRoles
 
     public function removeRole(Role|string $role): void
     {
-        if (!$role instanceof Role) {
+        if (! $role instanceof Role) {
             $role = Role::whereName($role)->first();
         }
 
@@ -120,14 +120,14 @@ trait HasRoles
     public function removeRoles(array $roles): void
     {
         foreach ($roles as $role) {
-            if (!$role instanceof Role) {
+            if (! $role instanceof Role) {
                 $role = Role::whereName($role)->first();
             }
 
-            if (!$role) {
+            if (! $role) {
                 continue;
             }
-    
+
             if ($this->hasRole($role)) {
                 $this->roles()->detach([$role->id]);
             }

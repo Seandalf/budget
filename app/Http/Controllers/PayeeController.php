@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Payee;
 use App\Http\Requests\StorePayeeRequest;
 use App\Http\Requests\UpdatePayeeRequest;
+use App\Models\Payee;
 
 class PayeeController extends Controller
 {

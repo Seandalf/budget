@@ -56,6 +56,7 @@ class BudgetPolicy
     public function create(User $user)
     {
         $budget_count = count($user->budgets);
+
         return $budget_count === 0 ? $user->hasPermission('create-budget') : $user->hasPermission('multiple-budgets');
     }
 

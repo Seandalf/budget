@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Role extends Model
 {
     use HasFactory, SoftDeletes, Auditable;
-    
+
     /**
      * The attributes that are mass assignable.
      *
@@ -33,13 +33,13 @@ class Role extends Model
     public function hasPermission(Permission|string $permission): bool
     {
         try {
-            if (!$permission instanceof Permission) {
+            if (! $permission instanceof Permission) {
                 $permission = Permission::whereName($permission)->first();
             }
-                
+
             if ($permission) {
                 foreach ($this->permissions as $perm) {
-                    if ($perm->id === $permission-> id) {
+                    if ($perm->id === $permission->id) {
                         return true;
                     }
                 }
@@ -53,11 +53,11 @@ class Role extends Model
 
     public function assignPermission(Permission|string $permission): void
     {
-        if (!$permission instanceof Permission) {
+        if (! $permission instanceof Permission) {
             $permission = Permission::whereName($permission)->first();
         }
 
-        if ($permission && !$this->hasPermission($permission)) {
+        if ($permission && ! $this->hasPermission($permission)) {
             $this->permissions()->attach([$permission->id]);
         }
     }
@@ -65,11 +65,11 @@ class Role extends Model
     public function assignPermissions(array $permissions): void
     {
         foreach ($permissions as $permission) {
-            if (!$permission instanceof Permission) {
+            if (! $permission instanceof Permission) {
                 $permission = Permission::whereName($permission)->first();
             }
 
-            if ($permission && !$this->hasPermission($permission)) {
+            if ($permission && ! $this->hasPermission($permission)) {
                 $this->permissions()->attach([$permission->id]);
             }
         }
@@ -77,7 +77,7 @@ class Role extends Model
 
     public function removePermission(Permission|string $permission): void
     {
-        if (!$permission instanceof Permission) {
+        if (! $permission instanceof Permission) {
             $permission = Permission::whereName($permission)->first();
         }
 
@@ -89,7 +89,7 @@ class Role extends Model
     public function removePermissions(array $permissions): void
     {
         foreach ($permissions as $permission) {
-            if (!$permission instanceof Permission) {
+            if (! $permission instanceof Permission) {
                 $permission = Permission::whereName($permission)->first();
             }
 

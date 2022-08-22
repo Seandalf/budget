@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\RecurringTransaction;
 use App\Http\Requests\StoreRecurringTransactionRequest;
 use App\Http\Requests\UpdateRecurringTransactionRequest;
+use App\Models\RecurringTransaction;
 
 class RecurringTransactionController extends Controller
 {

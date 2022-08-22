@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Log;
 class AuditableObserver
 {
     protected $previous;
-    
+
     /**
      * Handle the "created" event.
      *
@@ -74,7 +74,7 @@ class AuditableObserver
                 'auditable_id'   => $model->id,
                 'event'          => $action,
                 'old_values'     => $action === 'updated' ? json_encode($model->getOriginal()) : null,
-                'new_values'     => !in_array($action, ['deleted', 'forceDeleted']) ? json_encode($model) : null,
+                'new_values'     => ! in_array($action, ['deleted', 'forceDeleted']) ? json_encode($model) : null,
                 'ip_address'     => request()->ip(),
                 'user_id'        => Auth::id(),
             ];

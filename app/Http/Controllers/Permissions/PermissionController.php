@@ -17,7 +17,7 @@ class PermissionController extends Controller
     {
         $this->authorizeResource(Permission::class, 'permission');
     }
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -48,6 +48,7 @@ class PermissionController extends Controller
     {
         try {
             $permission = Permission::create($request->validated());
+
             return successResponse($permission);
         } catch (Exception $e) {
             return errorResponse($e->getMessage(), 'Could not create permission');
@@ -87,6 +88,7 @@ class PermissionController extends Controller
     {
         try {
             $permission->update($request->validated());
+
             return successResponse($permission);
         } catch (Exception $e) {
             return errorResponse($e->getMessage(), 'Could not update permission');
@@ -103,6 +105,7 @@ class PermissionController extends Controller
     {
         try {
             $permission->delete();
+
             return successResponse($permission);
         } catch (Exception $e) {
             return errorResponse($e->getMessage(), 'Could not delete permission');

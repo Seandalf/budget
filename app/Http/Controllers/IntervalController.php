@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Interval;
 use App\Http\Requests\StoreIntervalRequest;
 use App\Http\Requests\UpdateIntervalRequest;
+use App\Models\Interval;
 
 class IntervalController extends Controller
 {
