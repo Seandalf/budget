@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Exception;
-use App\Models\Permissions\Role;
 use App\Http\Requests\Permissions\RoleRequest;
+use App\Models\Permissions\Role;
+use Exception;
 
 class RoleController extends Controller
 {
@@ -17,7 +17,7 @@ class RoleController extends Controller
     {
         $this->authorizeResource(Permission::class, 'permission');
     }
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -119,6 +119,7 @@ class RoleController extends Controller
     {
         try {
             $role->delete();
+
             return successResponse($role);
         } catch (Exception $e) {
             return errorResponse($e->getMessage(), 'Could not delete role');

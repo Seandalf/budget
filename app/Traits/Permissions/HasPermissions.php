@@ -24,7 +24,7 @@ trait HasPermissions
 
     public function hasDirectPermission(Permission|string $permission): bool
     {
-        if (!$permission instanceof Permission) {
+        if (! $permission instanceof Permission) {
             $permission = Permission::whereName($permission)->first();
         }
 
@@ -41,11 +41,11 @@ trait HasPermissions
 
     public function hasPermissionViaRole(Permission|string $permission): bool
     {
-        if (!$this->roles) {
+        if (! $this->roles) {
             return false;
         }
 
-        if (!$permission instanceof Permission) {
+        if (! $permission instanceof Permission) {
             $permission = Permission::whereName($permission)->first();
         }
 
@@ -65,7 +65,7 @@ trait HasPermissions
     public function hasAnyPermission(array $permissions): bool
     {
         foreach ($permissions as $permission) {
-            if (!$permission instanceof Permission) {
+            if (! $permission instanceof Permission) {
                 $permission = Permission::whereName($permission)->first();
             }
 
@@ -80,11 +80,11 @@ trait HasPermissions
     public function hasAllPermissions(array $permissions): bool
     {
         foreach ($permissions as $permission) {
-            if (!$permission instanceof Permission) {
+            if (! $permission instanceof Permission) {
                 $permission = Permission::whereName($permission)->first();
             }
 
-            if (!$permission || !$this->hasPermission($permission)) {
+            if (! $permission || ! $this->hasPermission($permission)) {
                 return false;
             }
         }
@@ -102,7 +102,7 @@ trait HasPermissions
 
     public function getPermissionsViaRoles(): array
     {
-        if (!$this->roles) {
+        if (! $this->roles) {
             return [];
         }
 
@@ -111,11 +111,11 @@ trait HasPermissions
 
     public function assignPermission(Permission|string $permission): void
     {
-        if (!$permission instanceof Permission) {
+        if (! $permission instanceof Permission) {
             $permission = Permission::whereName($permission)->first();
         }
 
-        if ($permission && !$this->hasPermission($permission)) {
+        if ($permission && ! $this->hasPermission($permission)) {
             $this->permissions()->attach([$permission->id]);
         }
     }
@@ -123,11 +123,11 @@ trait HasPermissions
     public function assignPermissions(array $permissions): void
     {
         foreach ($permissions as $permission) {
-            if (!$permission instanceof Permission) {
+            if (! $permission instanceof Permission) {
                 $permission = Permission::whereName($permission)->first();
             }
 
-            if ($permission && !$this->hasPermission($permission)) {
+            if ($permission && ! $this->hasPermission($permission)) {
                 $this->permissions()->attach([$permission->id]);
             }
         }
@@ -135,7 +135,7 @@ trait HasPermissions
 
     public function removePermission(Permission|string $permission): void
     {
-        if (!$permission instanceof Permission) {
+        if (! $permission instanceof Permission) {
             $permission = Permission::whereName($permission)->first();
         }
 
@@ -147,7 +147,7 @@ trait HasPermissions
     public function removePermissions(array $permissions): void
     {
         foreach ($permissions as $permission) {
-            if (!$permission instanceof Permission) {
+            if (! $permission instanceof Permission) {
                 $permission = Permission::whereName($permission)->first();
             }
 

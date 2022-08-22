@@ -19,9 +19,11 @@ class HealthCheckController extends Controller
                 'transactions',
                 'budget_periods',
             )->get();
+
             return response('All good!', 200);
         } catch (Exception $e) {
             Log::error('Health check failed', ['error' => $e->getMessage()]);
+
             return response('Health check failed', 500);
         }
     }

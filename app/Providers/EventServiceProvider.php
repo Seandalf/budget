@@ -2,14 +2,14 @@
 
 namespace App\Providers;
 
-use Illuminate\Container\Container;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Event;
 use App\Models\Permissions\Permission;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
+use Illuminate\Container\Container;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\File;
 use ReflectionClass;
 
 class EventServiceProvider extends ServiceProvider

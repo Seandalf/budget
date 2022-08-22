@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\GroupTransaction;
 use App\Http\Requests\StoreGroupTransactionRequest;
 use App\Http\Requests\UpdateGroupTransactionRequest;
+use App\Models\GroupTransaction;
 
 class GroupTransactionController extends Controller
 {
