@@ -36,10 +36,10 @@ class RoleSeeder extends Seeder
                     break;
                 case 'free customer':
                     $role->assignPermissions([
-                        'create-budget', 
-                        'update-budget', 
-                        'delete-budget', 
-                        'view-budget', 
+                        'create-budget',
+                        'update-budget',
+                        'delete-budget',
+                        'view-budget',
                         'see-9',
                     ]);
             }

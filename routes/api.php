@@ -1,11 +1,11 @@
 <?php
 
+use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\RoleController;
+use App\Models\Permissions\Permission;
+use App\Models\Permissions\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Models\Permissions\Permission;
-use App\Http\Controllers\RoleController;
-use App\Http\Controllers\PermissionController;
-use App\Models\Permissions\Role;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,7 +28,7 @@ Route::middleware('auth:sanctum')->name('api.')->group(function () {
             Route::delete('/permissions/permissions/delete/{permission}', [PermissionController::class, 'delete'])->can('delete', 'permission')->name('delete');
             Route::get('/permissions/permissions/show/{permission}', [PermissionController::class, 'show'])->can('show', 'permission')->name('show');
         });
-        
+
         // Roles
         Route::name('roles.')->group(function () {
             Route::put('/roles/roles/create', [RoleController::class, 'create'])->can('create', Role::class)->name('create');

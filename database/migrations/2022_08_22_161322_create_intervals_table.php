@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      *
@@ -28,7 +27,7 @@ return new class extends Migration
             $table->timestamp('ends_at');
             $table->timestamps();
             $table->softDeletes();
-            
+
             $table->foreign('budget_id')->references('id')->on('budgets');
             $table->foreign('time_period_id')->references('id')->on('time_periods');
         });
