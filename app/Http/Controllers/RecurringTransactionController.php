@@ -9,6 +9,16 @@ use App\Models\RecurringTransaction;
 class RecurringTransactionController extends Controller
 {
     /**
+     * Create the controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->authorizeResource(RecurringTransaction::class, 'recurring_transaction');
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response

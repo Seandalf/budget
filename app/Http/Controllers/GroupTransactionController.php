@@ -9,6 +9,16 @@ use App\Models\GroupTransaction;
 class GroupTransactionController extends Controller
 {
     /**
+     * Create the controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->authorizeResource(GroupTransaction::class, 'group_transaction');
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
