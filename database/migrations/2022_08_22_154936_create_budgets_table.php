@@ -23,6 +23,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('currency_id');
             $table->unsignedBigInteger('time_period_id');
+            $table->tinyInteger('time_period_amount')->nullable();
             $table->timestamp('starts_at');
             $table->timestamps();
             $table->softDeletes();

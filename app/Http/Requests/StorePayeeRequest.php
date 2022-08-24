@@ -13,7 +13,7 @@ class StorePayeeRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return $this->user()->hasPermission('create-payee');
     }
 
     /**
@@ -24,7 +24,8 @@ class StorePayeeRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'name'      => 'required|string',
+            'budget_id' => 'required|exists:budgets,id'
         ];
     }
 }

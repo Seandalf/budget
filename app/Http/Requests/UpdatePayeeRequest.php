@@ -13,7 +13,7 @@ class UpdatePayeeRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return $this->user()->hasPermission('update-payee');
     }
 
     /**
@@ -24,7 +24,7 @@ class UpdatePayeeRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'name' => 'required|string',
         ];
     }
 }

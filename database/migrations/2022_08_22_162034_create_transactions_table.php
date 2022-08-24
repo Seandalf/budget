@@ -16,8 +16,8 @@ return new class extends Migration {
             $table->id();
             $table->string('name', 50);
             $table->string('description', 200)->nullable();
-            $table->bigInteger('budget')->default(0);
-            $table->bigInteger('actual')->default(0);
+            $table->bigInteger('budget')->nullable();
+            $table->bigInteger('actual')->nullable();
             $table->string('record_number', 100)->nullable();
             $table->tinyInteger('type');
             $table->unsignedBigInteger('interval_id');

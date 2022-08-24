@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\TransactionType;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
 
 class StoreCategoryRequest extends FormRequest
 {
@@ -13,7 +15,7 @@ class StoreCategoryRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return $this->user()->hasPermission('create-category');
     }
 
     /**
@@ -24,7 +26,9 @@ class StoreCategoryRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'name'      => 'required|string',
+            'type'      => [new Enum(TransactionType::class)],
+            'budget_id' => 'nullable|exists:budgets,id',
         ];
     }
 }

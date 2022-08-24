@@ -13,7 +13,7 @@ class StoreCurrencyRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return $this->user()->hasPermission('create-currency');
     }
 
     /**
@@ -24,7 +24,8 @@ class StoreCurrencyRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'name'      => 'required|string',
+            'shortcode' => 'required|min:3|max:4',
         ];
     }
 }

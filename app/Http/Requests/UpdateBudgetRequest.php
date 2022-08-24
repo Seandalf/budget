@@ -13,7 +13,7 @@ class UpdateBudgetRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return $this->user()->hasPermission('update-budget');
     }
 
     /**
@@ -24,7 +24,12 @@ class UpdateBudgetRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'name'             => 'required|string',
+            'description'      => 'nullable|string',
+            'future_intervals' => 'required|numeric|min:6|max:24',
+            'active'           => 'required|boolean',
+            'currency_id'      => 'required|exists:currencies,id',
+            'time_period_id'   => 'required|exists:time_periods,id',
         ];
     }
 }

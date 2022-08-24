@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\RecurringTransactionType;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
 
 class StoreRecurringTransactionRequest extends FormRequest
 {
@@ -13,7 +15,7 @@ class StoreRecurringTransactionRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return $this->user()->hasPermission('create-rtransaction');
     }
 
     /**
@@ -24,7 +26,19 @@ class StoreRecurringTransactionRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'name'                       => 'required|string',
+            'description'                => 'nullable|string',
+            'amount'                     => 'required|numeric|min:0',
+            'recurring_transaction_type' => [new Enum(RecurringTransactionType::class)],
+            'transaction_type'           => [new Enum(TransactionType::class)],
+            'active'                     => 'required|boolean',
+            'budget_id'                  => 'required|exists:budgets,id',
+            'category_id'                => 'required|exists:categories,id',
+            'payee_id'                   => 'required|exists:payees,id',
+            'time_period_id'             => 'required|exists:time_periods,id',
+            'time_period_amount'         => 'nullable|numeric',
+            'starts_at'                  => 'required|date|after_or_equal:today',
+            'ends_at'                    => 'nullable|date|after:starts_at',
         ];
     }
 }

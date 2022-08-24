@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateIntervalRequest extends FormRequest
+class UpdateCurrencyRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +13,7 @@ class UpdateIntervalRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return $this->user()->hasPermission('update-currency');
     }
 
     /**
@@ -24,7 +24,8 @@ class UpdateIntervalRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'name'      => 'required|string',
+            'shortcode' => 'required|min:3|max:4',
         ];
     }
 }

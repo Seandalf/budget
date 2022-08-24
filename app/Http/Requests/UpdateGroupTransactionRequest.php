@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Validation\Rules\Enum;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateGroupTransactionRequest extends FormRequest
@@ -13,7 +14,7 @@ class UpdateGroupTransactionRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return $this->user()->hasPermission('update-gtransaction');
     }
 
     /**
@@ -24,7 +25,15 @@ class UpdateGroupTransactionRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'name'        => 'required|string',
+            'description' => 'nullable|string',
+            'budget'      => 'nullable|numeric',
+            'actual'      => 'nullable|numeric',
+            'type'        => [new Enum(TransactionType::class)],
+            'final'       => 'required|boolean',
+            'interval_id' => 'required|exists:intervals,id',
+            'category_id' => 'required|exists:categories,id',
+            'payee_id'    => 'nullable|exists:payees,id',
         ];
     }
 }
