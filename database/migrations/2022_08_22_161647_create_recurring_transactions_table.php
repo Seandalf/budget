@@ -21,6 +21,7 @@ return new class extends Migration {
             $table->tinyInteger('transaction_type');
             $table->boolean('active')->default(true);
             $table->unsignedBigInteger('budget_id');
+            $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('category_id');
             $table->unsignedBigInteger('payee_id')->nullable();
             $table->unsignedBigInteger('time_period_id');
@@ -31,6 +32,7 @@ return new class extends Migration {
             $table->softDeletes();
 
             $table->foreign('budget_id')->references('id')->on('budgets');
+            $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('category_id')->references('id')->on('categories');
             $table->foreign('payee_id')->references('id')->on('payees');
             $table->foreign('time_period_id')->references('id')->on('time_periods');

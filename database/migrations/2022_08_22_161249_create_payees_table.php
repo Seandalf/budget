@@ -16,10 +16,12 @@ return new class extends Migration {
             $table->id();
             $table->string('name', 50);
             $table->unsignedBigInteger('budget_id')->nullable();
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
             $table->foreign('budget_id')->references('id')->on('budgets');
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

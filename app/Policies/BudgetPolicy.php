@@ -44,7 +44,7 @@ class BudgetPolicy
      */
     public function view(User $user, Budget $budget)
     {
-        return $budget->user_id === $user->id;
+        return $budget->user_id === $user->id && $user->hasPermission('view-budget');
     }
 
     /**
@@ -69,7 +69,7 @@ class BudgetPolicy
      */
     public function update(User $user, Budget $budget)
     {
-        return $budget->user_id === $user->id;
+        return $budget->user_id === $user->id && $user->hasPermission('update-budget');
     }
 
     /**
@@ -81,7 +81,7 @@ class BudgetPolicy
      */
     public function delete(User $user, Budget $budget)
     {
-        return $budget->user_id === $user->id;
+        return $budget->user_id === $user->id && $user->hasPermission('delete-budget');
     }
 
     /**
@@ -93,7 +93,7 @@ class BudgetPolicy
      */
     public function restore(User $user, Budget $budget)
     {
-        return $budget->user_id === $user->id;
+        return $budget->user_id === $user->id && $user->hasPermission('restore-budget');
     }
 
     /**

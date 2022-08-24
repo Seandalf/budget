@@ -11,6 +11,20 @@ class PayeePolicy
     use HandlesAuthorization;
 
     /**
+     * Perform pre-authorization checks.
+     *
+     * @param  \App\Models\User  $user
+     * @param  string  $ability
+     * @return void|bool
+     */
+    public function before(User $user, $ability)
+    {
+        if ($user->hasRole('superadmin') || $user->hasRole('admin')) {
+            return true;
+        }
+    }
+
+    /**
      * Determine whether the user can view any models.
      *
      * @param  \App\Models\User  $user
@@ -18,7 +32,7 @@ class PayeePolicy
      */
     public function viewAny(User $user)
     {
-        //
+        return false;
     }
 
     /**
@@ -30,7 +44,7 @@ class PayeePolicy
      */
     public function view(User $user, Payee $payee)
     {
-        //
+        return $user->hasPermission('view-payee') && ($user->id === $payee->user_id || $payee->id === null);
     }
 
     /**
@@ -41,7 +55,7 @@ class PayeePolicy
      */
     public function create(User $user)
     {
-        //
+        return $user->hasPermission('create-payee');
     }
 
     /**
@@ -53,7 +67,7 @@ class PayeePolicy
      */
     public function update(User $user, Payee $payee)
     {
-        //
+        return $payee->user_id === $user->id && $user->hasPermission('update-payee');
     }
 
     /**
@@ -65,7 +79,7 @@ class PayeePolicy
      */
     public function delete(User $user, Payee $payee)
     {
-        //
+        return $payee->user_id === $user->id && $user->hasPermission('delete-payee');
     }
 
     /**
@@ -77,7 +91,7 @@ class PayeePolicy
      */
     public function restore(User $user, Payee $payee)
     {
-        //
+        return $payee->user_id === $user->id && $user->hasPermission('restore-payee');
     }
 
     /**
@@ -89,6 +103,6 @@ class PayeePolicy
      */
     public function forceDelete(User $user, Payee $payee)
     {
-        //
+        return false;
     }
 }

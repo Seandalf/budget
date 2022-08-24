@@ -11,6 +11,20 @@ class RecurringTransactionPolicy
     use HandlesAuthorization;
 
     /**
+     * Perform pre-authorization checks.
+     *
+     * @param  \App\Models\User  $user
+     * @param  string  $ability
+     * @return void|bool
+     */
+    public function before(User $user, $ability)
+    {
+        if ($user->hasRole('superadmin') || $user->hasRole('admin')) {
+            return true;
+        }
+    }
+
+    /**
      * Determine whether the user can view any models.
      *
      * @param  \App\Models\User  $user
@@ -18,7 +32,7 @@ class RecurringTransactionPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        return false;
     }
 
     /**
@@ -30,7 +44,7 @@ class RecurringTransactionPolicy
      */
     public function view(User $user, RecurringTransaction $recurringTransaction)
     {
-        //
+        return $recurringTransaction->user_id === $user->id && $user->hasPermission('view-rtransaction');
     }
 
     /**
@@ -41,7 +55,7 @@ class RecurringTransactionPolicy
      */
     public function create(User $user)
     {
-        //
+        return $user->hasPermission('create-rtransaction');
     }
 
     /**
@@ -53,7 +67,7 @@ class RecurringTransactionPolicy
      */
     public function update(User $user, RecurringTransaction $recurringTransaction)
     {
-        //
+        return $recurringTransaction->user_id === $user->id && $user->hasPermission('update-rtransaction');
     }
 
     /**
@@ -65,7 +79,7 @@ class RecurringTransactionPolicy
      */
     public function delete(User $user, RecurringTransaction $recurringTransaction)
     {
-        //
+        return $recurringTransaction->user_id === $user->id && $user->hasPermission('delete-rtransaction');
     }
 
     /**
@@ -77,7 +91,7 @@ class RecurringTransactionPolicy
      */
     public function restore(User $user, RecurringTransaction $recurringTransaction)
     {
-        //
+        return $recurringTransaction->user_id === $user->id && $user->hasPermission('restore-rtransaction');
     }
 
     /**
@@ -89,6 +103,6 @@ class RecurringTransactionPolicy
      */
     public function forceDelete(User $user, RecurringTransaction $recurringTransaction)
     {
-        //
+        return false;
     }
 }

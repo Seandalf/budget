@@ -20,6 +20,7 @@ return new class extends Migration {
             $table->bigInteger('actual')->nullable();
             $table->tinyInteger('type');
             $table->boolean('final')->default(false);
+            $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('interval_id');
             $table->unsignedBigInteger('category_id');
             $table->unsignedBigInteger('payee_id')->nullable();
@@ -27,6 +28,7 @@ return new class extends Migration {
             $table->timestamps();
             $table->softDeletes();
 
+            $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('interval_id')->references('id')->on('intervals');
             $table->foreign('category_id')->references('id')->on('categories');
             $table->foreign('payee_id')->references('id')->on('payees');

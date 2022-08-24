@@ -11,6 +11,20 @@ class TransactionPolicy
     use HandlesAuthorization;
 
     /**
+     * Perform pre-authorization checks.
+     *
+     * @param  \App\Models\User  $user
+     * @param  string  $ability
+     * @return void|bool
+     */
+    public function before(User $user, $ability)
+    {
+        if ($user->hasRole('superadmin') || $user->hasRole('admin')) {
+            return true;
+        }
+    }
+
+    /**
      * Determine whether the user can view any models.
      *
      * @param  \App\Models\User  $user
@@ -18,7 +32,7 @@ class TransactionPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        return false;
     }
 
     /**
@@ -30,7 +44,7 @@ class TransactionPolicy
      */
     public function view(User $user, Transaction $transaction)
     {
-        //
+        return $transaction->user_id === $user->id && $user->hasPermission('view-transaction');
     }
 
     /**
@@ -41,7 +55,7 @@ class TransactionPolicy
      */
     public function create(User $user)
     {
-        //
+        return $user->hasPermission('create-transaction');
     }
 
     /**
@@ -53,7 +67,7 @@ class TransactionPolicy
      */
     public function update(User $user, Transaction $transaction)
     {
-        //
+        return $transaction->user_id === $user->id && $user->hasPermission('update-transaction');
     }
 
     /**
@@ -65,7 +79,7 @@ class TransactionPolicy
      */
     public function delete(User $user, Transaction $transaction)
     {
-        //
+        return $transaction->user_id === $user->id && $user->hasPermission('delete-transaction');
     }
 
     /**
@@ -77,7 +91,7 @@ class TransactionPolicy
      */
     public function restore(User $user, Transaction $transaction)
     {
-        //
+        return $transaction->user_id === $user->id && $user->hasPermission('restore-transaction');
     }
 
     /**
@@ -89,6 +103,6 @@ class TransactionPolicy
      */
     public function forceDelete(User $user, Transaction $transaction)
     {
-        //
+        return false;
     }
 }

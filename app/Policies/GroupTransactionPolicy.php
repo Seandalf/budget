@@ -11,6 +11,20 @@ class GroupTransactionPolicy
     use HandlesAuthorization;
 
     /**
+     * Perform pre-authorization checks.
+     *
+     * @param  \App\Models\User  $user
+     * @param  string  $ability
+     * @return void|bool
+     */
+    public function before(User $user, $ability)
+    {
+        if ($user->hasRole('superadmin') || $user->hasRole('admin')) {
+            return true;
+        }
+    }
+
+    /**
      * Determine whether the user can view any models.
      *
      * @param  \App\Models\User  $user
@@ -18,7 +32,7 @@ class GroupTransactionPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        return false;
     }
 
     /**
@@ -30,7 +44,7 @@ class GroupTransactionPolicy
      */
     public function view(User $user, GroupTransaction $groupTransaction)
     {
-        //
+        return $groupTransaction->user_id === $user->id && $user->hasPermission('view-gtransaction');
     }
 
     /**
@@ -41,7 +55,7 @@ class GroupTransactionPolicy
      */
     public function create(User $user)
     {
-        //
+        return $user->hasPermission('create-gtransaction');
     }
 
     /**
@@ -53,7 +67,7 @@ class GroupTransactionPolicy
      */
     public function update(User $user, GroupTransaction $groupTransaction)
     {
-        //
+        return $groupTransaction->user_id === $user->id && $user->hasPermission('update-gtransaction');
     }
 
     /**
@@ -65,7 +79,7 @@ class GroupTransactionPolicy
      */
     public function delete(User $user, GroupTransaction $groupTransaction)
     {
-        //
+        return $groupTransaction->user_id === $user->id && $user->hasPermission('delete-gtransaction');
     }
 
     /**
@@ -77,7 +91,7 @@ class GroupTransactionPolicy
      */
     public function restore(User $user, GroupTransaction $groupTransaction)
     {
-        //
+        return $groupTransaction->user_id === $user->id && $user->hasPermission('restore-gtransaction');
     }
 
     /**
@@ -89,6 +103,6 @@ class GroupTransactionPolicy
      */
     public function forceDelete(User $user, GroupTransaction $groupTransaction)
     {
-        //
+        return false;
     }
 }
