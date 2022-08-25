@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Permissions;
 
-use App\Http\Requests\Permissions\PermissionRequest;
-use App\Models\Permissions\Permission;
 use Exception;
+use App\Http\Controllers\Controller;
+use App\Models\Permissions\Permission;
+use App\Http\Requests\Permissions\PermissionRequest;
+use Illuminate\Support\Facades\Auth;
 
 class PermissionController extends Controller
 {
@@ -63,7 +65,11 @@ class PermissionController extends Controller
      */
     public function show(Permission $permission)
     {
-        //
+        try {
+            return successResponse($permission);
+        } catch (Exception $e) {
+            return errorResponse($e->getMessage(), 'Could not view permission');
+        }
     }
 
     /**

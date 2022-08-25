@@ -75,7 +75,7 @@ class AuditableObserver
                 'event'          => $action,
                 'old_values'     => $action === 'updated' ? json_encode($model->getOriginal()) : null,
                 'new_values'     => ! in_array($action, ['deleted', 'forceDeleted']) ? json_encode($model) : null,
-                'ip_address'     => request()->ip(),
+                'ip_address'     => env('APP_ENV') !== 'testing' ? request()->ip() : '127.0.0.1',
                 'user_id'        => Auth::id(),
             ];
 

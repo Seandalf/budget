@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
             CategorySeeder::class,
         ]);
 
-        if (config('app.env') !== 'production') {
+        if (!in_array(config('app.env'), ['production', 'testing'])) {
             $users = User::factory(10)->create();
 
             $roles = Role::all()->toArray();

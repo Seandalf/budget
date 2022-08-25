@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Permissions;
 
-use App\Http\Requests\Permissions\RoleRequest;
-use App\Models\Permissions\Role;
 use Exception;
+use App\Models\Permissions\Role;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Permissions\RoleRequest;
 
 class RoleController extends Controller
 {
@@ -15,7 +16,7 @@ class RoleController extends Controller
      */
     public function __construct()
     {
-        $this->authorizeResource(Permission::class, 'permission');
+        $this->authorizeResource(Role::class, 'role');
     }
 
     /**
@@ -48,10 +49,12 @@ class RoleController extends Controller
     {
         try {
             $data = $request->validated();
-            $role = Role::create($data['name']);
+            $role = Role::create(['name' => $data['name']]);
 
-            foreach ($data['permissions'] as $permission) {
-                $role->assignPermission($permission['name']);
+            if (isset($data['permissions'])) {
+                foreach ($data['permissions'] as $permission) {
+                    $role->assignPermission($permission['name']);
+                }
             }
 
             return successResponse($role);
@@ -68,7 +71,11 @@ class RoleController extends Controller
      */
     public function show(Role $role)
     {
-        //
+        try {
+            return successResponse($role);
+        } catch (Exception $e) {
+            return errorResponse($e->getMessage(), 'Could not view role');
+        }
     }
 
     /**
@@ -93,13 +100,16 @@ class RoleController extends Controller
     {
         try {
             $data = $request->validated();
-            $role->update($data['name']);
+            $role->update(['name' => $data['name']]);
 
-            foreach ($data['permissions'] as $permission) {
-                if ($permission['delete']) {
-                    $role->removePermission($permission['name']);
-                } else {
-                    $role->assignPermission($permission['name']);
+
+            if (isset($data['permissions'])) {
+                foreach ($data['permissions'] as $permission) {
+                    if ($permission['delete']) {
+                        $role->removePermission($permission['name']);
+                    } else {
+                        $role->assignPermission($permission['name']);
+                    }
                 }
             }
 
