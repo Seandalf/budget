@@ -24,6 +24,7 @@ class Interval extends Model
         'transactions',
         'final',
         'budget_id',
+        'user_id',
         'time_period_id',
         'time_period_amount',
         'starts_at',

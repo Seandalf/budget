@@ -29,8 +29,6 @@ class StoreBudgetRequest extends FormRequest
             'opening_balance'    => 'required|numeric',
             'closing_balance'    => 'required|numeric',
             'future_intervals'   => 'required|numeric|min:6|max:24',
-            'active'             => 'required|boolean',
-            'user_id'            => 'required|exists:users,id',
             'currency_id'        => 'required|exists:currencies,id',
             'time_period_id'     => 'required|exists:time_periods,id',
             'time_period_amount' => 'nullable|numeric',

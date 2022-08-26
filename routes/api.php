@@ -1,11 +1,13 @@
 <?php
 
-use App\Http\Controllers\Permissions\PermissionController;
-use App\Http\Controllers\Permissions\RoleController;
-use App\Models\Permissions\Permission;
-use App\Models\Permissions\Role;
+use App\Models\Budget;
 use Illuminate\Http\Request;
+use App\Models\Permissions\Role;
 use Illuminate\Support\Facades\Route;
+use App\Models\Permissions\Permission;
+use App\Http\Controllers\BudgetController;
+use App\Http\Controllers\Permissions\RoleController;
+use App\Http\Controllers\Permissions\PermissionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +37,14 @@ Route::middleware('auth:sanctum')->name('api.')->group(function () {
             Route::patch('/roles/update/{role}', [RoleController::class, 'update'])->can('update', 'role')->name('update');
             Route::delete('/roles/delete/{role}', [RoleController::class, 'destroy'])->can('delete', 'role')->name('delete');
             Route::get('/roles/show/{role}', [RoleController::class, 'show'])->can('view', 'role')->name('show');
+        });
+
+        // Budgets
+        Route::name('budgets.')->group(function () {
+            Route::put('/budgets/create', [BudgetController::class, 'store'])->can('create', Budget::class)->name('create');
+            Route::patch('/budgets/update/{budget}', [BudgetController::class, 'update'])->can('update', 'budget')->name('update');
+            Route::delete('/budgets/delete/{budget}', [BudgetController::class, 'destroy'])->can('delete', 'budget')->name('delete');
+            Route::get('/budgets/show/{budget}', [BudgetController::class, 'show'])->can('view', 'budget')->name('show');
         });
     });
 

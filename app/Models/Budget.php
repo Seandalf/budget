@@ -25,7 +25,8 @@ class Budget extends Model
         'user_id',
         'currency_id',
         'time_period_id',
-        'start_at',
+        'time_period_amount',
+        'starts_at',
     ];
 
     protected $casts = [
@@ -54,6 +55,11 @@ class Budget extends Model
     public function currency(): BelongsTo
     {
         return $this->belongsTo(Currency::class);
+    }
+
+    public function time_period(): BelongsTo
+    {
+        return $this->belongsTo(TimePeriod::class);
     }
 
     public function group_transactions(): HasManyThrough

@@ -19,12 +19,12 @@ class TimePeriodSeeder extends Seeder
             ['name' => 'daily'],
             ['name' => 'weekly'],
             ['name' => 'monthly'],
-            ['name' => 'every other month'],
             ['name' => 'quarterly'],
-            ['name' => 'annually'],
+            ['name' => 'yearly'],
             ['name' => 'day'],
             ['name' => 'week'],
             ['name' => 'month'],
+            ['name' => 'quarter'],
             ['name' => 'year'],
         ]);
     }
