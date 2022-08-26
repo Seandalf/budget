@@ -39,3 +39,30 @@ $role->assignPermissions(['create-budget', 'delete-budget', ...]); // Assign all
 $role->removePermission('create-budget'); // Remove this permission
 $role->removePermissions(['create-budget', 'delete-budget', ...]); // Remove these permissions
 ```
+
+## Audits
+
+This application supports the storage of an audit trail to track changes that are made to any model with the `Auditable` trait. To make a model auditable, do the following:
+
+```
+use App\Traits\Audits\Auditable;
+
+class Example extends Model
+{
+    use Auditable;
+```
+
+With this trait, any of the following actions will create a record in the `audits` table: `created`, `updated`, `deleted`, `restored`, `forceDeleted`. If you are updating a model, the audit record will store the old and new values.
+
+All audit records for a particular record can be loaded as a relation, such as
+
+```
+$user = User::find(1);
+$audits = $user->audits;
+```
+
+You can load the latest audit record as such:
+
+```
+$latest = $user->audits()->latest()->first();
+```
