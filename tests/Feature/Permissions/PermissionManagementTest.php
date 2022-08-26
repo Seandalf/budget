@@ -2,34 +2,10 @@
 
 namespace Tests\Feature\Auth;
 
-use App\Models\Permissions\Role;
-use App\Models\User;
-use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class PermissionManagementTest extends TestCase
 {
-    use RefreshDatabase, DatabaseMigrations;
-
-    protected $user;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->artisan('db:seed');
-    }
-
-    protected function create_user_with_role($role = 'superadmin'): Authenticatable
-    {
-        $role = Role::whereName($role)->first();
-        $user = User::factory()->create();
-        $user->assignRole($role);
-        return User::find($user->id);
-    }
-
     // Tests for user restrictions on the creation of permissions
 
     public function test_guest_user_cannot_create_permission()

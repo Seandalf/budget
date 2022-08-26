@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Auth;
 
-use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -16,7 +15,7 @@ class EmailVerificationTest extends TestCase
 
     public function test_email_verification_screen_can_be_rendered()
     {
-        $user = User::factory()->create([
+        $user = $this->create_user_with_role('free-customer', [
             'email_verified_at' => null,
         ]);
 
@@ -27,14 +26,14 @@ class EmailVerificationTest extends TestCase
 
     public function test_email_can_be_verified()
     {
-        $user = User::factory()->create([
+        $user = $this->create_user_with_role('free-customer', [
             'email_verified_at' => null,
         ]);
 
         Event::fake();
 
         $verificationUrl = URL::temporarySignedRoute(
-            'verification.verify',
+            'auth.verification.verify',
             now()->addMinutes(60),
             ['id' => $user->id, 'hash' => sha1($user->email)]
         );
@@ -48,12 +47,12 @@ class EmailVerificationTest extends TestCase
 
     public function test_email_is_not_verified_with_invalid_hash()
     {
-        $user = User::factory()->create([
+        $user = $this->create_user_with_role('free-customer', [
             'email_verified_at' => null,
         ]);
 
         $verificationUrl = URL::temporarySignedRoute(
-            'verification.verify',
+            'auth.verification.verify',
             now()->addMinutes(60),
             ['id' => $user->id, 'hash' => sha1('wrong-email')]
         );

@@ -47,12 +47,12 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
-
+        
         event(new Registered($user));
-
+        
+        $user->createToken('default');
+        $user->assignRole('free-customer');
         Auth::login($user);
-        Auth::user()->createToken('default');
-        Auth::user()->assignRole('free-customer');
 
         return redirect(RouteServiceProvider::HOME);
     }
