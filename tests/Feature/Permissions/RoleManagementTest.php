@@ -31,7 +31,7 @@ class RoleManagementTest extends TestCase
         auth()->forgetGuards();
 
         $response = $this->json('PATCH', "/api/roles/update/{$role_id}", [
-            'name' => fake()->word()
+            'name' => fake()->word(),
         ]);
 
         $response->assertUnauthorized();
@@ -43,7 +43,7 @@ class RoleManagementTest extends TestCase
         $response = $this->actingAs($user)->json('PUT', '/api/roles/create', [
             'name' => fake()->word(),
             'permissions' => null,
-            // 'permissions' => 
+            // 'permissions' =>
         ]);
 
         $content = json_decode($response->getContent(), true);
@@ -224,7 +224,7 @@ class RoleManagementTest extends TestCase
     {
         $user = $this->create_user_with_role();
         $response = $this->actingAs($user)->json('PUT', '/api/roles/create', [
-            'description' => fake()->word()
+            'description' => fake()->word(),
         ]);
 
         $response->assertInvalid(['name']);
@@ -382,7 +382,6 @@ class RoleManagementTest extends TestCase
     }
 
     // Tests for viewing a role
-    
 
     public function test_a_role_can_be_viewed()
     {
@@ -401,7 +400,7 @@ class RoleManagementTest extends TestCase
         $response->assertJson([
             'success' => true,
             'data' => [
-                'id' => $role_id
+                'id' => $role_id,
             ],
         ]);
     }

@@ -11,7 +11,7 @@ class PermissionManagementTest extends TestCase
     public function test_guest_user_cannot_create_permission()
     {
         $response = $this->json('PUT', '/api/permissions/create', [
-            'name' => fake()->word()
+            'name' => fake()->word(),
         ]);
 
         $response->assertUnauthorized();
@@ -29,7 +29,7 @@ class PermissionManagementTest extends TestCase
         auth()->forgetGuards();
 
         $response = $this->json('PATCH', "/api/permissions/update/{$permission_id}", [
-            'name' => fake()->word()
+            'name' => fake()->word(),
         ]);
 
         $response->assertUnauthorized();
@@ -71,7 +71,7 @@ class PermissionManagementTest extends TestCase
     {
         $user = $this->create_user_with_role();
         $response = $this->actingAs($user)->json('PUT', '/api/permissions/create', [
-            'name' => fake()->word()
+            'name' => fake()->word(),
         ]);
 
         $response->assertOk();
@@ -88,7 +88,7 @@ class PermissionManagementTest extends TestCase
         $permission_id = $content['data']['id'];
 
         $response = $this->actingAs($user)->json('PATCH', "/api/permissions/update/{$permission_id}", [
-            'name' => fake()->word()
+            'name' => fake()->word(),
         ]);
 
         $response->assertOk();
@@ -128,7 +128,7 @@ class PermissionManagementTest extends TestCase
     {
         $user = $this->create_user_with_role('free-customer');
         $response = $this->actingAs($user)->json('PUT', '/api/permissions/create', [
-            'name' => fake()->word()
+            'name' => fake()->word(),
         ]);
 
         $response->assertForbidden();
@@ -146,7 +146,7 @@ class PermissionManagementTest extends TestCase
         $user = $this->create_user_with_role('free-customer');
 
         $response = $this->actingAs($user)->json('PATCH', "/api/permissions/update/{$permission_id}", [
-            'name' => fake()->word()
+            'name' => fake()->word(),
         ]);
 
         $response->assertForbidden();
@@ -208,7 +208,7 @@ class PermissionManagementTest extends TestCase
     {
         $user = $this->create_user_with_role();
         $response = $this->actingAs($user)->json('PUT', '/api/permissions/create', [
-            'description' => fake()->word()
+            'description' => fake()->word(),
         ]);
 
         $response->assertInvalid(['name']);
@@ -356,7 +356,6 @@ class PermissionManagementTest extends TestCase
     }
 
     // Tests for viewing a permission
-    
 
     public function test_a_permission_can_be_viewed()
     {
@@ -374,7 +373,7 @@ class PermissionManagementTest extends TestCase
         $response->assertJson([
             'success' => true,
             'data' => [
-                'id' => $permission_id
+                'id' => $permission_id,
             ],
         ]);
     }

@@ -25,7 +25,7 @@ class StorePayeeRequest extends FormRequest
     {
         return [
             'name'      => 'required|string',
-            'budget_id' => 'required|exists:budgets,id'
+            'budget_id' => 'required|exists:budgets,id',
         ];
     }
 }

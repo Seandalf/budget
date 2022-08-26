@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Permissions;
 
-use Exception;
-use App\Models\Permissions\Role;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Permissions\RoleRequest;
+use App\Models\Permissions\Role;
+use Exception;
 
 class RoleController extends Controller
 {
@@ -101,7 +101,6 @@ class RoleController extends Controller
         try {
             $data = $request->validated();
             $role->update(['name' => $data['name']]);
-
 
             if (isset($data['permissions'])) {
                 foreach ($data['permissions'] as $permission) {

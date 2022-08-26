@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Permissions;
 
-use Exception;
 use App\Http\Controllers\Controller;
-use App\Models\Permissions\Permission;
 use App\Http\Requests\Permissions\PermissionRequest;
+use App\Models\Permissions\Permission;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 
 class PermissionController extends Controller
