@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Exception;
-use App\Models\Payee;
 use App\Http\Requests\StorePayeeRequest;
 use App\Http\Requests\UpdatePayeeRequest;
+use App\Models\Payee;
+use Exception;
 
 class PayeeController extends Controller
 {
@@ -53,6 +53,7 @@ class PayeeController extends Controller
     {
         try {
             $payee = Payee::create($request->validated());
+
             return successResponse($payee);
         } catch (Exception $e) {
             return errorResponse($e->getMessage(), 'Could not create payee');
@@ -92,6 +93,7 @@ class PayeeController extends Controller
     {
         try {
             $payee->update($request->validated());
+
             return successResponse($payee);
         } catch (Exception $e) {
             return errorResponse($e->getMessage(), 'Could not update payee');
@@ -108,6 +110,7 @@ class PayeeController extends Controller
     {
         try {
             $payee->delete();
+
             return successResponse($payee);
         } catch (Exception $e) {
             return errorResponse($e->getMessage(), 'Could not delete payee');

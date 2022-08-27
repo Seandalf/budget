@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Exception;
-use App\Models\GroupTransaction;
 use App\Http\Requests\StoreGroupTransactionRequest;
 use App\Http\Requests\UpdateGroupTransactionRequest;
+use App\Models\GroupTransaction;
 use App\Models\Interval;
+use Exception;
 
 class GroupTransactionController extends Controller
 {
@@ -54,7 +54,7 @@ class GroupTransactionController extends Controller
     {
         try {
             $data = $request->validated();
-            
+
             $interval = Interval::find($data['interval_id']);
             $budget = $interval->budget;
 

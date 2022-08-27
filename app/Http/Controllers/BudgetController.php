@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Exception;
-use Carbon\Carbon;
-use App\Models\Budget;
 use App\Http\Requests\StoreBudgetRequest;
 use App\Http\Requests\UpdateBudgetRequest;
+use App\Models\Budget;
 use App\Models\Interval;
+use Carbon\Carbon;
 use Carbon\CarbonPeriod;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 
 class BudgetController extends Controller
@@ -44,7 +44,6 @@ class BudgetController extends Controller
      */
     public function create()
     {
-        
     }
 
     /**
@@ -145,7 +144,7 @@ class BudgetController extends Controller
                     foreach ($periods as $period) {
                         $period_date = Carbon::create($period)->startOfDay();
 
-                        if (!array_search($period_date, array_column($intervals, 'starts_at'))) {
+                        if (! array_search($period_date, array_column($intervals, 'starts_at'))) {
                             Interval::create([
                                 'budget_id' => $budget->id,
                                 'user_id' => Auth::id(),
@@ -159,7 +158,7 @@ class BudgetController extends Controller
                             ]);
                         }
                     }
-                    
+
                     $budget->recalculateBalances();
                 }
             }
@@ -180,6 +179,7 @@ class BudgetController extends Controller
     {
         try {
             $budget->delete();
+
             return successResponse($budget);
         } catch (Exception $e) {
             return errorResponse($e->getMessage(), 'Could not delete budget');

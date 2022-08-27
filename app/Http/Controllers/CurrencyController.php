@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Exception;
-use App\Models\Currency;
 use App\Http\Requests\StoreCurrencyRequest;
 use App\Http\Requests\UpdateCurrencyRequest;
+use App\Models\Currency;
+use Exception;
 
 class CurrencyController extends Controller
 {
@@ -53,6 +53,7 @@ class CurrencyController extends Controller
     {
         try {
             $currency = Currency::create($request->validated());
+
             return successResponse($currency);
         } catch (Exception $e) {
             return errorResponse($e->getMessage(), 'Could not create currency');
@@ -96,6 +97,7 @@ class CurrencyController extends Controller
     {
         try {
             $currency->update($request->validated());
+
             return successResponse($currency);
         } catch (Exception $e) {
             return errorResponse($e->getMessage(), 'Could not update currency');
@@ -116,6 +118,7 @@ class CurrencyController extends Controller
             }
 
             $currency->delete();
+
             return successResponse($currency);
         } catch (Exception $e) {
             return errorResponse($e->getMessage(), 'Could not delete currency');

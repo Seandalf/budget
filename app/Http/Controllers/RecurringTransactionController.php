@@ -72,7 +72,7 @@ class RecurringTransactionController extends Controller
             $occurrences = CarbonPeriod::create($recurringTransaction->starts_at, "{$every} {$time_period}", $ends_at)->toArray();
 
             foreach ($occurrences as $occur) {
-                $matching_intervals = array_filter($intervals, function($interval) use ($occur) {
+                $matching_intervals = array_filter($intervals, function ($interval) use ($occur) {
                     return $interval->starts_at <= $occur && $interval->ends_at >= $occur;
                 });
                 $interval = $matching_intervals[0];
@@ -93,7 +93,7 @@ class RecurringTransactionController extends Controller
                 if ($recurringTransaction->recurring_transaction_type === RecurringTransactionType::SINGLE) {
                     Transaction::create($transaction_data);
                 }
-                
+
                 if ($recurringTransaction->recurring_transaction_type === RecurringTransactionType::GROUP) {
                     unset($transaction_data['due_at']);
                     GroupTransaction::create($transaction_data);
@@ -156,7 +156,7 @@ class RecurringTransactionController extends Controller
             // if updating the amounts, need to update all non-paid transactions
             if ($updating_amount) {
                 foreach ($transactions as $transaction) {
-                    if (!$transaction->actual) {
+                    if (! $transaction->actual) {
                         // Only update the budgeted transactions. Paid ones have been paid and shouldn't be changed by this.
                         $transaction->budget = $recurringTransaction->amount;
                         $transaction->save();
@@ -167,7 +167,7 @@ class RecurringTransactionController extends Controller
             // If updating the frequency, need to destroy all non-paid and recreate
             if ($updating_frequency) {
                 foreach ($transactions as $transaction) {
-                    if (!$transaction->actual) {
+                    if (! $transaction->actual) {
                         $transaction->delete();
                     }
                 }
@@ -190,11 +190,11 @@ class RecurringTransactionController extends Controller
                         continue;
                     }
 
-                    $matching_intervals = array_filter($intervals, function($interval) use ($occur) {
+                    $matching_intervals = array_filter($intervals, function ($interval) use ($occur) {
                         return $interval->starts_at <= $occur && $interval->ends_at >= $occur;
                     });
                     $interval = $matching_intervals[0];
-    
+
                     $transaction_data = [
                         'name' => $recurringTransaction->name,
                         'description' => "{$recurringTransaction->description} - {$occur->toDateString()}",
@@ -207,11 +207,11 @@ class RecurringTransactionController extends Controller
                         'recurring_transaction_id' => $recurringTransaction->id,
                         'due_at' => $occur->toDateString(),
                     ];
-    
+
                     if ($recurringTransaction->recurring_transaction_type === RecurringTransactionType::SINGLE) {
                         Transaction::create($transaction_data);
                     }
-                    
+
                     if ($recurringTransaction->recurring_transaction_type === RecurringTransactionType::GROUP) {
                         unset($transaction_data['due_at']);
                         GroupTransaction::create($transaction_data);
@@ -226,6 +226,7 @@ class RecurringTransactionController extends Controller
 
                 $budget->recalculateBalances();
             }
+
             return successResponse(RecurringTransaction::all());
         } catch (Exception $e) {
             return errorResponse($e->getMessage(), 'Could not update recurring transaction');
@@ -246,7 +247,7 @@ class RecurringTransactionController extends Controller
 
             // Destroy all non-paid
             foreach ($transactions as $transaction) {
-                if (!$transaction->actual) {
+                if (! $transaction->actual) {
                     $transaction->delete();
                 }
             }

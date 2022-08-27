@@ -53,6 +53,7 @@ class CategoryController extends Controller
     {
         try {
             $category = Category::create($request->validated());
+
             return successResponse($category);
         } catch (Exception $e) {
             return errorResponse($e->getMessage(), 'Could not create category');
@@ -96,6 +97,7 @@ class CategoryController extends Controller
     {
         try {
             $category->update($request->validated());
+
             return successResponse($category);
         } catch (Exception $e) {
             return errorResponse($e->getMessage(), 'Could not update category');
@@ -116,6 +118,7 @@ class CategoryController extends Controller
             }
 
             $category->delete();
+
             return successResponse($category);
         } catch (Exception $e) {
             return errorResponse($e->getMessage(), 'Could not delete category');

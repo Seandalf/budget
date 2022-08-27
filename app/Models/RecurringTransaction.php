@@ -61,7 +61,7 @@ class RecurringTransaction extends Model
         if ($this->recurring_transaction_type === RecurringTransactionType::SINGLE) {
             return $this->hasMany(Transaction::class);
         }
-        
+
         if ($this->recurring_transaction_type === RecurringTransactionType::GROUP) {
             return $this->hasMany(GroupTransaction::class);
         }

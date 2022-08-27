@@ -68,7 +68,7 @@ class Interval extends Model
         $transactions = Transaction::whereIntervalId($this->id)
                                    ->whereNull('group_transaction_id')
                                    ->get();
-        
+
         $group_transactions = GroupTransaction::whereIntervalId($this->id)->get();
 
         $income = 0;
@@ -101,7 +101,5 @@ class Interval extends Model
         $this->income = $income;
         $this->expenditure = $expenditure;
         $this->save();
-
-        
     }
 }
