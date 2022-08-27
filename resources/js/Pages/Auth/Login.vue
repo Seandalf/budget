@@ -1,4 +1,5 @@
 <script setup>
+import GuestLayout from "@/Layouts/Guest.vue";
 import { Head, Link, useForm } from "@inertiajs/inertia-vue3";
 
 defineProps({
@@ -21,4 +22,8 @@ const submit = () => {
 
 <template>
     <Head title="Log in" />
+
+    <GuestLayout>
+        <input type="text" />
+    </GuestLayout>
 </template>
