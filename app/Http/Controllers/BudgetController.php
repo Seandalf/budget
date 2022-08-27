@@ -30,7 +30,11 @@ class BudgetController extends Controller
      */
     public function index()
     {
-        //
+        try {
+            return successResponse(Budget::all());
+        } catch (Exception $e) {
+            return errorResponse($e->getMessage(), 'Could not view all budget');
+        }
     }
 
     /**
@@ -56,12 +60,7 @@ class BudgetController extends Controller
             $data['user_id'] = Auth::id();
             $budget = Budget::create($data);
 
-            $start_date = Carbon::create($budget->starts_at);
-            $every = $budget->time_period_amount ?? 1;
-            $time_period = $this->parseTimePeriod($budget->time_period->name);
-            $end_date = Carbon::create($budget->starts_at)->add($time_period, $every * $budget->future_intervals)->subDay();
-
-            $periods = CarbonPeriod::create($start_date, "{$every} {$time_period}", $end_date)->toArray();
+            $periods = $budget->intervalPeriods();
             foreach ($periods as $period) {
                 Interval::create([
                     'budget_id' => $budget->id,
@@ -69,7 +68,10 @@ class BudgetController extends Controller
                     'time_period_id' => $budget->time_period->id,
                     'time_period_amount' => $budget->time_period_amount,
                     'starts_at' => $period->toDateTimeString(),
-                    'ends_at' => Carbon::create($period)->add($time_period, $every)->subDay()->toDateTimeString(),
+                    'ends_at' => Carbon::create($period)
+                                       ->add(parseTimePeriod($budget->time_period->name), $budget->time_period_amount ?? 1)
+                                       ->subDay()
+                                       ->toDateTimeString(),
                 ]);
             }
 
@@ -87,7 +89,11 @@ class BudgetController extends Controller
      */
     public function show(Budget $budget)
     {
-        //
+        try {
+            return successResponse($budget);
+        } catch (Exception $e) {
+            return errorResponse($e->getMessage(), 'Could not view budget');
+        }
     }
 
     /**
@@ -110,7 +116,58 @@ class BudgetController extends Controller
      */
     public function update(UpdateBudgetRequest $request, Budget $budget)
     {
-        //
+        try {
+            $data = $request->validated();
+            $updating_total_intervals = $data['future_intervals'] !== $budget->future_intervals;
+
+            $budget->update($data);
+
+            if ($updating_total_intervals) {
+                $intervals = Interval::whereUserId(Auth::id())
+                                     ->whereBudgetId($budget->id)
+                                     ->whereFinal(false)
+                                     ->orderBy('starts_at')
+                                     ->get();
+
+                if (count($intervals) > $budget->future_intervals) {
+                    $i = count($intervals) - 1;
+
+                    do {
+                        $intervals[$i]->delete();
+                        $i--;
+                    } while (count($intervals) > $budget->future_intervals);
+                }
+
+                if (count($intervals) < $budget->future_intervals) {
+                    $periods = $budget->intervalPeriods();
+                    $intervals = $budget->intervals->toArray();
+
+                    foreach ($periods as $period) {
+                        $period_date = Carbon::create($period)->startOfDay();
+
+                        if (!array_search($period_date, array_column($intervals, 'starts_at'))) {
+                            Interval::create([
+                                'budget_id' => $budget->id,
+                                'user_id' => Auth::id(),
+                                'time_period_id' => $budget->time_period->id,
+                                'time_period_amount' => $budget->time_period_amount,
+                                'starts_at' => $period->toDateTimeString(),
+                                'ends_at' => Carbon::create($period)
+                                                   ->add(parseTimePeriod($budget->time_period->name), $budget->time_period_amount ?? 1)
+                                                   ->subDay()
+                                                   ->toDateTimeString(),
+                            ]);
+                        }
+                    }
+                    
+                    $budget->recalculateBalances();
+                }
+            }
+
+            return successResponse($budget);
+        } catch (Exception $e) {
+            return errorResponse($e->getMessage(), 'Could not update budget');
+        }
     }
 
     /**
@@ -121,29 +178,11 @@ class BudgetController extends Controller
      */
     public function destroy(Budget $budget)
     {
-        //
-    }
-
-    protected function parseTimePeriod($time_period): string
-    {
-        if (in_array($time_period, ['daily', 'day'])) {
-            return 'day';
-        }
-        
-        if (in_array($time_period, ['weekly', 'week'])) {
-            return 'week';
-        }
-        
-        if (in_array($time_period, ['monthly', 'month'])) {
-            return 'month';
-        }
-        
-        if (in_array($time_period, ['quarterly', 'quarter'])) {
-            return 'quarter';
-        }
-        
-        if (in_array($time_period, ['yearly', 'year'])) {
-            return 'year';
+        try {
+            $budget->delete();
+            return successResponse($budget);
+        } catch (Exception $e) {
+            return errorResponse($e->getMessage(), 'Could not delete budget');
         }
     }
 }

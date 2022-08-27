@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 use App\Models\Category;
+use Exception;
 
 class CategoryController extends Controller
 {
@@ -25,7 +26,11 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        try {
+            return successResponse(Category::all());
+        } catch (Exception $e) {
+            return errorResponse($e->getMessage(), 'Could not view all category');
+        }
     }
 
     /**
@@ -46,7 +51,12 @@ class CategoryController extends Controller
      */
     public function store(StoreCategoryRequest $request)
     {
-        //
+        try {
+            $category = Category::create($request->validated());
+            return successResponse($category);
+        } catch (Exception $e) {
+            return errorResponse($e->getMessage(), 'Could not create category');
+        }
     }
 
     /**
@@ -57,7 +67,11 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        //
+        try {
+            return successResponse($category);
+        } catch (Exception $e) {
+            return errorResponse($e->getMessage(), 'Could not create category');
+        }
     }
 
     /**
@@ -80,7 +94,12 @@ class CategoryController extends Controller
      */
     public function update(UpdateCategoryRequest $request, Category $category)
     {
-        //
+        try {
+            $category->update($request->validated());
+            return successResponse($category);
+        } catch (Exception $e) {
+            return errorResponse($e->getMessage(), 'Could not update category');
+        }
     }
 
     /**
@@ -91,6 +110,15 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        try {
+            if (count($category->transactions) > 0 || count($category->gtransactions) > 0 || count($category->rtransactions) > 0) {
+                throw new Exception('Cannot delete category when it has existing transactions');
+            }
+
+            $category->delete();
+            return successResponse($category);
+        } catch (Exception $e) {
+            return errorResponse($e->getMessage(), 'Could not delete category');
+        }
     }
 }

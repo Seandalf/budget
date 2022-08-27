@@ -25,3 +25,28 @@ if (! function_exists('successResponse')) {
         ])->setStatusCode(200);
     }
 }
+
+if (! function_exists('parseTimePeriod')) {
+    function parseTimePeriod($time_period): string
+    {
+        if (in_array($time_period, ['daily', 'day'])) {
+            return 'day';
+        }
+        
+        if (in_array($time_period, ['weekly', 'week'])) {
+            return 'week';
+        }
+        
+        if (in_array($time_period, ['monthly', 'month'])) {
+            return 'month';
+        }
+        
+        if (in_array($time_period, ['quarterly', 'quarter'])) {
+            return 'quarter';
+        }
+        
+        if (in_array($time_period, ['yearly', 'year'])) {
+            return 'year';
+        }
+    }
+}

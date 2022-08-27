@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Casts\MoneyCast;
+use App\Enums\TransactionType;
 use App\Traits\Audits\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -60,5 +61,47 @@ class Interval extends Model
     {
         // TODO
         return [];
+    }
+
+    public function recalculateIncomeExpenditure(): void
+    {
+        $transactions = Transaction::whereIntervalId($this->id)
+                                   ->whereNull('group_transaction_id')
+                                   ->get();
+        
+        $group_transactions = GroupTransaction::whereIntervalId($this->id)->get();
+
+        $income = 0;
+        $expenditure = 0;
+
+        foreach ($transactions as $transaction) {
+            $amount = $transaction->actual ?? $transaction->budget;
+
+            if ($transaction->type === TransactionType::INCOME) {
+                $income += $amount;
+            }
+
+            if ($transaction->type === TransactionType::EXPENDITURE) {
+                $expenditure += $amount;
+            }
+        }
+
+        foreach ($group_transactions as $transaction) {
+            $amount = $transaction->actual ?? $transaction->budget;
+
+            if ($transaction->type === TransactionType::INCOME) {
+                $income += $amount;
+            }
+
+            if ($transaction->type === TransactionType::EXPENDITURE) {
+                $expenditure += $amount;
+            }
+        }
+
+        $this->income = $income;
+        $this->expenditure = $expenditure;
+        $this->save();
+
+        
     }
 }

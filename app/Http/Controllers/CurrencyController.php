@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
+use App\Models\Currency;
 use App\Http\Requests\StoreCurrencyRequest;
 use App\Http\Requests\UpdateCurrencyRequest;
-use App\Models\Currency;
 
 class CurrencyController extends Controller
 {
@@ -25,7 +26,11 @@ class CurrencyController extends Controller
      */
     public function index()
     {
-        //
+        try {
+            return successResponse(Currency::all());
+        } catch (Exception $e) {
+            return errorResponse($e->getMessage(), 'Could not view all currency');
+        }
     }
 
     /**
@@ -46,7 +51,12 @@ class CurrencyController extends Controller
      */
     public function store(StoreCurrencyRequest $request)
     {
-        //
+        try {
+            $currency = Currency::create($request->validated());
+            return successResponse($currency);
+        } catch (Exception $e) {
+            return errorResponse($e->getMessage(), 'Could not create currency');
+        }
     }
 
     /**
@@ -57,7 +67,11 @@ class CurrencyController extends Controller
      */
     public function show(Currency $currency)
     {
-        //
+        try {
+            return successResponse($currency);
+        } catch (Exception $e) {
+            return errorResponse($e->getMessage(), 'Could not view currency');
+        }
     }
 
     /**
@@ -80,7 +94,12 @@ class CurrencyController extends Controller
      */
     public function update(UpdateCurrencyRequest $request, Currency $currency)
     {
-        //
+        try {
+            $currency->update($request->validated());
+            return successResponse($currency);
+        } catch (Exception $e) {
+            return errorResponse($e->getMessage(), 'Could not update currency');
+        }
     }
 
     /**
@@ -91,6 +110,15 @@ class CurrencyController extends Controller
      */
     public function destroy(Currency $currency)
     {
-        //
+        try {
+            if (count($currency->budgets) > 0) {
+                throw new Exception('Cannot delete currencies with budgets attached');
+            }
+
+            $currency->delete();
+            return successResponse($currency);
+        } catch (Exception $e) {
+            return errorResponse($e->getMessage(), 'Could not delete currency');
+        }
     }
 }

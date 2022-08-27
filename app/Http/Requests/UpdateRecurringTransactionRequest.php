@@ -28,8 +28,6 @@ class UpdateRecurringTransactionRequest extends FormRequest
             'name'                       => 'required|string',
             'description'                => 'nullable|string',
             'amount'                     => 'required|numeric|min:0',
-            'recurring_transaction_type' => [new Enum(RecurringTransactionType::class)],
-            'transaction_type'           => [new Enum(TransactionType::class)],
             'active'                     => 'required|boolean',
             'category_id'                => 'required|exists:categories,id',
             'payee_id'                   => 'required|exists:payees,id',

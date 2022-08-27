@@ -31,7 +31,6 @@ class UpdateGroupTransactionRequest extends FormRequest
             'actual'      => 'nullable|numeric',
             'type'        => [new Enum(TransactionType::class)],
             'final'       => 'required|boolean',
-            'interval_id' => 'required|exists:intervals,id',
             'category_id' => 'required|exists:categories,id',
             'payee_id'    => 'nullable|exists:payees,id',
         ];

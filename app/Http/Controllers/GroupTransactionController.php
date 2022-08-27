@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
+use App\Models\GroupTransaction;
 use App\Http\Requests\StoreGroupTransactionRequest;
 use App\Http\Requests\UpdateGroupTransactionRequest;
-use App\Models\GroupTransaction;
+use App\Models\Interval;
 
 class GroupTransactionController extends Controller
 {
@@ -25,7 +27,11 @@ class GroupTransactionController extends Controller
      */
     public function index()
     {
-        //
+        try {
+            return successResponse(GroupTransaction::all());
+        } catch (Exception $e) {
+            return errorResponse($e->getMessage(), 'Could not view all group transactions');
+        }
     }
 
     /**
@@ -46,7 +52,21 @@ class GroupTransactionController extends Controller
      */
     public function store(StoreGroupTransactionRequest $request)
     {
-        //
+        try {
+            $data = $request->validated();
+            
+            $interval = Interval::find($data['interval_id']);
+            $budget = $interval->budget;
+
+            $groupTransaction = GroupTransaction::create($data);
+
+            $interval->recalculateIncomeExpenditure();
+            $budget->recalculateBalances();
+
+            return successResponse($groupTransaction);
+        } catch (Exception $e) {
+            return errorResponse($e->getMessage(), 'Could not create group transactions');
+        }
     }
 
     /**
@@ -57,7 +77,11 @@ class GroupTransactionController extends Controller
      */
     public function show(GroupTransaction $groupTransaction)
     {
-        //
+        try {
+            return successResponse(GroupTransaction::all());
+        } catch (Exception $e) {
+            return errorResponse($e->getMessage(), 'Could not view all group transactions');
+        }
     }
 
     /**
@@ -80,7 +104,23 @@ class GroupTransactionController extends Controller
      */
     public function update(UpdateGroupTransactionRequest $request, GroupTransaction $groupTransaction)
     {
-        //
+        try {
+            $interval = $groupTransaction->interval;
+            $budget = $interval->budget;
+            $data = $request->validated();
+            $updating_amount = $data['amount'] != $groupTransaction->amount;
+
+            $groupTransaction->update($data);
+
+            if ($updating_amount) {
+                $interval->recalculateIncomeExpenditure();
+                $budget->recalculateBalances();
+            }
+
+            return successResponse(GroupTransaction::all());
+        } catch (Exception $e) {
+            return errorResponse($e->getMessage(), 'Could not view all group transactions');
+        }
     }
 
     /**
@@ -91,6 +131,18 @@ class GroupTransactionController extends Controller
      */
     public function destroy(GroupTransaction $groupTransaction)
     {
-        //
+        try {
+            $interval = $groupTransaction->interval;
+            $budget = $interval->budget;
+
+            $groupTransaction->delete();
+
+            $interval->recalculateIncomeExpenditure();
+            $budget->recalculateBalances();
+
+            return successResponse($groupTransaction);
+        } catch (Exception $e) {
+            return errorResponse($e->getMessage(), 'Could not delete group transactions');
+        }
     }
 }

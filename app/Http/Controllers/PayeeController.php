@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
+use App\Models\Payee;
 use App\Http\Requests\StorePayeeRequest;
 use App\Http\Requests\UpdatePayeeRequest;
-use App\Models\Payee;
 
 class PayeeController extends Controller
 {
@@ -25,7 +26,11 @@ class PayeeController extends Controller
      */
     public function index()
     {
-        //
+        try {
+            return successResponse(Payee::all());
+        } catch (Exception $e) {
+            return errorResponse($e->getMessage(), 'Could not view all payees');
+        }
     }
 
     /**
@@ -46,7 +51,12 @@ class PayeeController extends Controller
      */
     public function store(StorePayeeRequest $request)
     {
-        //
+        try {
+            $payee = Payee::create($request->validated());
+            return successResponse($payee);
+        } catch (Exception $e) {
+            return errorResponse($e->getMessage(), 'Could not create payee');
+        }
     }
 
     /**
@@ -80,7 +90,12 @@ class PayeeController extends Controller
      */
     public function update(UpdatePayeeRequest $request, Payee $payee)
     {
-        //
+        try {
+            $payee->update($request->validated());
+            return successResponse($payee);
+        } catch (Exception $e) {
+            return errorResponse($e->getMessage(), 'Could not update payee');
+        }
     }
 
     /**
@@ -91,6 +106,11 @@ class PayeeController extends Controller
      */
     public function destroy(Payee $payee)
     {
-        //
+        try {
+            $payee->delete();
+            return successResponse($payee);
+        } catch (Exception $e) {
+            return errorResponse($e->getMessage(), 'Could not delete payee');
+        }
     }
 }

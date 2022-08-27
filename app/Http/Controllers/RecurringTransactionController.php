@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreRecurringTransactionRequest;
 use App\Http\Requests\UpdateRecurringTransactionRequest;
 use App\Models\RecurringTransaction;
+use Exception;
 
 class RecurringTransactionController extends Controller
 {
@@ -25,7 +26,11 @@ class RecurringTransactionController extends Controller
      */
     public function index()
     {
-        //
+        try {
+            return successResponse(RecurringTransaction::all());
+        } catch (Exception $e) {
+            return errorResponse($e->getMessage(), 'Could not view all recurring transactions');
+        }
     }
 
     /**
@@ -46,7 +51,12 @@ class RecurringTransactionController extends Controller
      */
     public function store(StoreRecurringTransactionRequest $request)
     {
-        //
+        try {
+            // Need to create the transactions and add them to the intervals
+            return successResponse(RecurringTransaction::all());
+        } catch (Exception $e) {
+            return errorResponse($e->getMessage(), 'Could not create recurring transaction');
+        }
     }
 
     /**
@@ -80,7 +90,15 @@ class RecurringTransactionController extends Controller
      */
     public function update(UpdateRecurringTransactionRequest $request, RecurringTransaction $recurringTransaction)
     {
-        //
+        try {
+            // if updating the amounts, need to update the interval totals
+            // If updating the frequency, need to destroy all in future and recreate, update interval totals
+            // If being made inactive, need to destroy all in future
+            // If moving end date, need to correct
+            return successResponse(RecurringTransaction::all());
+        } catch (Exception $e) {
+            return errorResponse($e->getMessage(), 'Could not update recurring transaction');
+        }
     }
 
     /**
@@ -91,6 +109,12 @@ class RecurringTransactionController extends Controller
      */
     public function destroy(RecurringTransaction $recurringTransaction)
     {
-        //
+        try {
+            $recurringTransaction->delete();
+            // Destroy all in future
+            return successResponse($recurringTransaction);
+        } catch (Exception $e) {
+            return errorResponse($e->getMessage(), 'Could not delete recurring transaction');
+        }
     }
 }
