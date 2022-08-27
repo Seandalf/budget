@@ -110,7 +110,7 @@ class TransactionController extends Controller
             $interval = Interval::find($data['interval_id']);
             $budget = $interval->budget;
 
-            $transaction = Transaction::create($data);
+            $transaction->update($data);
 
             if ($updating_amount || $updating_interval) {
                 if ($old_interval) {

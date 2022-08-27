@@ -37,6 +37,7 @@ class StoreTransactionRequest extends FormRequest
             'payee_id'                 => 'nullable|numeric|exists:payees,id',
             'recurring_transaction_id' => 'nullable|numeric|exists:recurring_transactions,id',
             'group_transaction_id'     => 'nullable|numeric|exists:group_transactions,id',
+            'due_at'                   => 'nullable|date',
             'paid_at'                  => 'nullable|date|before_or_equal:today',
         ];
     }

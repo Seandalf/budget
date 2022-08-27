@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Casts\MoneyCast;
 use App\Enums\RecurringTransactionType;
 use App\Enums\TransactionType;
 use App\Traits\Audits\Auditable;
@@ -26,7 +25,6 @@ class RecurringTransaction extends Model
         'amount',
         'recurring_transaction_type',
         'transaction_type',
-        'active',
         'budget_id',
         'category_id',
         'payee_id',
@@ -37,10 +35,8 @@ class RecurringTransaction extends Model
     ];
 
     protected $casts = [
-        'amount'                     => MoneyCast::class,
         'recurring_transaction_type' => RecurringTransactionType::class,
         'transaction_type'           => TransactionType::class,
-        'active'                     => 'boolean',
         'starts_at'                  => 'datetime',
         'ends_at'                    => 'datetime',
     ];
@@ -62,6 +58,12 @@ class RecurringTransaction extends Model
 
     public function transactions(): HasMany
     {
-        return $this->hasMany(Transaction::class);
+        if ($this->recurring_transaction_type === RecurringTransactionType::SINGLE) {
+            return $this->hasMany(Transaction::class);
+        }
+        
+        if ($this->recurring_transaction_type === RecurringTransactionType::GROUP) {
+            return $this->hasMany(GroupTransaction::class);
+        }
     }
 }

@@ -34,7 +34,6 @@ class UpdateRecurringTransactionRequest extends FormRequest
             'time_period_id'             => 'required|exists:time_periods,id',
             'time_period_amount'         => 'nullable|numeric',
             'starts_at'                  => 'required|date|after_or_equal:today',
-            'ends_at'                    => 'nullable|date|after:starts_at',
         ];
     }
 }

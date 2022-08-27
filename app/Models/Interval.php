@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Casts\MoneyCast;
 use App\Enums\TransactionType;
 use App\Traits\Audits\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -33,10 +32,6 @@ class Interval extends Model
     ];
 
     protected $casts = [
-        'opening_balance' => MoneyCast::class,
-        'closing_balance' => MoneyCast::class,
-        'income'          => MoneyCast::class,
-        'expenditure'     => MoneyCast::class,
         'final'           => 'boolean',
         'starts_at'       => 'datetime',
         'ends_at'         => 'datetime',
@@ -65,6 +60,11 @@ class Interval extends Model
 
     public function recalculateIncomeExpenditure(): void
     {
+        if ($this->final) {
+            // If this budget interval has been finalised, don't change anything
+            return;
+        }
+
         $transactions = Transaction::whereIntervalId($this->id)
                                    ->whereNull('group_transaction_id')
                                    ->get();

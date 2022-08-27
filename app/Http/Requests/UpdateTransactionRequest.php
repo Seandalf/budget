@@ -34,6 +34,7 @@ class UpdateTransactionRequest extends FormRequest
             'interval_id'              => 'required|numeric|exists:intervals,id',
             'category_id'              => 'required|numeric|exists:categories,id',
             'payee_id'                 => 'nullable|numeric|exists:payees,id',
+            'due_at'                   => 'nullable|date',
             'paid_at'                  => 'nullable|date|before_or_equal:today',
         ];
     }

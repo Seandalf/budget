@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Carbon\Carbon;
-use App\Casts\MoneyCast;
 use Carbon\CarbonPeriod;
 use App\Traits\Audits\Auditable;
 use Illuminate\Database\Eloquent\Model;
@@ -34,8 +33,6 @@ class Budget extends Model
     protected $casts = [
         'starts_at'       => 'datetime',
         'active'          => 'boolean',
-        'opening_balance' => MoneyCast::class,
-        'closing_balance' => MoneyCast::class,
     ];
 
     // Relationships
@@ -100,10 +97,15 @@ class Budget extends Model
             } else {
                 $interval->opening_balance = $last_period->closing_balance;
             }
+            $last_period = $interval;
+
+            if ($interval->final) {
+                // If this budget interval has been finalised, don't change anything
+                continue;
+            }
 
             $interval->closing_balance = $interval->opening_balance + $interval->income - $interval->expenditure;
             $interval->save();
-            $last_period = $interval;
         }
     }
 }

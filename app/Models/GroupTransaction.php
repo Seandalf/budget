@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Casts\MoneyCast;
 use App\Enums\TransactionType;
 use App\Traits\Audits\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -32,8 +31,6 @@ class GroupTransaction extends Model
     ];
 
     protected $casts = [
-        'budget' => MoneyCast::class,
-        'actual' => MoneyCast::class,
         'type'   => TransactionType::class,
         'final'  => 'boolean',
     ];
