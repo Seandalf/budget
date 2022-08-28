@@ -73,7 +73,8 @@ const submit = () => {
             <Button
                 label="Login to account"
                 buttonStyle="secondary"
-                :disabled="!v$.$anyDirty || v$.$invalid"
+                :disabled="!v$.$anyDirty || v$.$invalid || form.processing"
+                :loading="form.processing"
                 class="mt-6"
                 fullWidth
             />

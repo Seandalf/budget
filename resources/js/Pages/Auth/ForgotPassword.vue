@@ -4,6 +4,7 @@ import useVuelidate from "@vuelidate/core";
 import { required, email, helpers } from "@vuelidate/validators";
 
 import GuestLayout from "@/Layouts/Guest.vue";
+import Alert from "@/Components/Alert.vue";
 import Button from "@/Components/Button.vue";
 import Errors from "@/Components/Errors.vue";
 import TextInput from "@/Components/Input/TextInput.vue";
@@ -26,7 +27,11 @@ const rules = {
 const v$ = useVuelidate(rules, form);
 
 const submit = () => {
-    form.post(route("auth.password.email"));
+    form.post(route("auth.password.email"), {
+        onFinish: (e) => {
+            console.log(e);
+        },
+    });
 };
 </script>
 
@@ -45,6 +50,9 @@ const submit = () => {
         </p>
 
         <Errors v-if="form.errors" :errors="form.errors" />
+        <Alert v-if="status" type="success">
+            {{ status }}
+        </Alert>
         <form @submit.prevent="submit">
             <TextInput
                 type="email"
@@ -56,7 +64,8 @@ const submit = () => {
             <Button
                 label="Reset Password"
                 buttonStyle="secondary"
-                :disabled="!v$.$anyDirty || v$.$invalid"
+                :disabled="!v$.$anyDirty || v$.$invalid || form.processing"
+                :loading="form.processing"
                 class="mt-6"
                 fullWidth
             />

@@ -1,4 +1,6 @@
 <script setup>
+import Alert from "@/Components/Alert.vue";
+
 defineProps({
     errors: {
         type: [Array, Object],
@@ -8,11 +10,9 @@ defineProps({
 </script>
 
 <template>
-    <div
-        v-for="(error, index) in errors"
-        :key="`error-${index}`"
-        class="rounded p-4 bg-red-100 text-red-600 text-sm font-medium mb-6"
-    >
-        {{ error }}
+    <div v-for="(error, index) in errors" :key="`error-${index}`">
+        <Alert type="error">
+            {{ error }}
+        </Alert>
     </div>
 </template>
