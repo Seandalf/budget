@@ -1,7 +1,9 @@
 <script setup>
-import { Head, useForm } from "@inertiajs/inertia-vue3";
+import { onMounted } from "vue";
+import { Head, useForm, usePage } from "@inertiajs/inertia-vue3";
 import useVuelidate from "@vuelidate/core";
 import { required, email, helpers } from "@vuelidate/validators";
+import { useToast } from "vue-toastification";
 
 import GuestLayout from "@/Layouts/Guest.vue";
 import Button from "@/Components/Button.vue";
@@ -32,8 +34,16 @@ const rules = {
 
 const v$ = useVuelidate(rules, form);
 
+const toast = useToast();
+
 const submit = () => {
-    form.post(route("auth.login.store"));
+    form.post(route("auth.login.store"), {
+        onFinish: () => {
+            for (const error in form.errors) {
+                toast.error(form.errors[error]);
+            }
+        },
+    });
 };
 </script>
 
@@ -47,7 +57,6 @@ const submit = () => {
             Login to your account
         </h3>
 
-        <Errors v-if="form.errors" :errors="form.errors" />
         <form @submit.prevent="submit">
             <TextInput
                 type="email"

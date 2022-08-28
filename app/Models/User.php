@@ -5,13 +5,14 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Traits\Audits\Auditable;
-use App\Traits\Permissions\HasPermissions;
-use App\Traits\Permissions\HasRoles;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Traits\Permissions\HasRoles;
+use Illuminate\Notifications\Notifiable;
+use App\Traits\Permissions\HasPermissions;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Notifications\Auth\ResetPasswordNotification;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
@@ -56,5 +57,20 @@ class User extends Authenticatable
     public function isAdmin(): bool
     {
         return $this->hasAnyRole(['superadmin', 'admin']);
+    }
+
+    /**
+     * Send a password reset notification to the user.
+     *
+     * @param  string  $token
+     * @return void
+     */
+    public function sendPasswordResetNotification($token)
+    {
+        $url = url(route('password.reset', [
+            'token' => $token,
+        ], false));;
+
+        $this->notify(new ResetPasswordNotification($url, $this->first_name));
     }
 }
