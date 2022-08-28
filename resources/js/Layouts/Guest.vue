@@ -1,17 +1,20 @@
 <script setup>
 import { Link } from "@inertiajs/inertia-vue3";
+import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 </script>
 
 <template>
     <div
-        class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100"
+        class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100 hex-background"
     >
-        <div>
-            <Link href="/"> Homw </Link>
+        <div class="max-w-md">
+            <Link href="/">
+                <ApplicationLogo />
+            </Link>
         </div>
 
         <div
-            class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg"
+            class="w-full sm:max-w-md mt-6 p-6 bg-white shadow-md overflow-hidden sm:rounded-lg"
         >
             <slot />
         </div>

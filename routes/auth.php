@@ -35,9 +35,5 @@ Route::middleware('auth')->name('auth.')->group(function () {
 
     Route::post('email/verification-notification', [EmailVerificationNotificationController::class, 'store'])->middleware('throttle:6,1')->name('verification.send');
 
-    Route::get('confirm-password', [ConfirmablePasswordController::class, 'show'])->name('password.confirm.show');
-
-    Route::post('confirm-password', [ConfirmablePasswordController::class, 'store'])->name('password.confirm.store');
-
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });
