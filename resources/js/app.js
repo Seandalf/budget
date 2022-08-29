@@ -24,9 +24,9 @@ createInertiaApp({
             .use(plugin)
             .use(ZiggyVue, Ziggy)
             .use(Toast, {
-                position: "top-center",
+                position: "bottom-right",
                 icon: false,
-                closeButton: false,
+                timeout: 10000,
             })
             .mount(el);
     },

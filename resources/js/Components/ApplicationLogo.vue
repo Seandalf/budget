@@ -11,7 +11,7 @@ const props = defineProps({
 
 <template>
     <h1
-        class="font-logo text-6xl tracking-tight"
+        class="font-logo text-6xl tracking-tight text-center"
         :class="{
             'text-primary': color !== 'white',
             'text-white': color === 'white',

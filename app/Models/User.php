@@ -11,7 +11,10 @@ use Illuminate\Notifications\Notifiable;
 use App\Traits\Permissions\HasPermissions;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Notifications\Auth\ResetPasswordNotification;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
@@ -59,6 +62,44 @@ class User extends Authenticatable
         return $this->hasAnyRole(['superadmin', 'admin']);
     }
 
+    public function budgets(): HasMany
+    {
+        return $this->hasMany(Budget::class);
+    }
+
+    public function categories(): HasMany
+    {
+        return $this->hasMany(Category::class);
+    }
+
+    public function payees(): HasMany
+    {
+        return $this->hasMany(Payee::class);
+    }
+
+    public function recurring_transactions(): HasMany
+    {
+        return $this->hasMany(RecurringTransaction::class);
+    }
+
+    public function group_transactions(): HasMany
+    {
+        return $this->hasMany(GroupTransaction::class);
+    }
+
+    public function transactions(): HasMany
+    {
+        return $this->hasMany(Transaction::class);
+    }
+
+    protected function all_transactions(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => array_merge($this->transactions, $this->group_transactions),
+        );
+    }
+
+
     /**
      * Send a password reset notification to the user.
      *
@@ -69,6 +110,7 @@ class User extends Authenticatable
     {
         $url = url(route('password.reset', [
             'token' => $token,
+            'email' => $this->email
         ], false));;
 
         $this->notify(new ResetPasswordNotification($url, $this->first_name));

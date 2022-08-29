@@ -4,6 +4,7 @@ namespace App\Traits\Permissions;
 
 use App\Models\Permissions\Permission;
 use Exception;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 trait HasPermissions
@@ -92,12 +93,30 @@ trait HasPermissions
         return true;
     }
 
-    public function getAllPermissions(): array
+    public function getAllPermissions(): Collection
     {
         $permissions = $this->permissions;
-        $role_permissions = $this->roles ? $this->roles->permissions : [];
+        $roles = $this->roles ?? [];
 
-        return array_merge($permissions, $role_permissions);
+        foreach ($roles as $role) {
+            foreach ($role->permissions as $permission) {
+                $permissions[] = $permission;
+            }
+        }
+
+        return $permissions;
+    }
+
+    public function getAllPermissionsAsArray(): array
+    {
+        $permissions = $this->getAllPermissions();
+
+        $final = [];
+        foreach ($permissions as $permission) {
+            $final[] = $permission->name;
+        }
+
+        return $final;
     }
 
     public function getPermissionsViaRoles(): array

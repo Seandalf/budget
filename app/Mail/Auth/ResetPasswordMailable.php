@@ -34,6 +34,9 @@ class ResetPasswordMailable extends Mailable
     {
         return $this->from('app@openbudget.com', 'Open Budget')
                     ->subject('Your password reset link')
-                    ->view('emails.auth.reset');
+                    ->markdown('emails.auth.reset', [
+                        'name' => $this->name,
+                        'url' => $this->url,
+                    ]);
     }
 }

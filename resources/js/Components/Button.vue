@@ -1,7 +1,9 @@
 <script setup>
 import { computed } from "vue";
 import { Link } from "@inertiajs/inertia-vue3";
-import helpers from "@/helpers";
+
+import RightArrow from "@/Components/ButtonIcons/RightArrow.vue";
+import DownArrow from "@/Components/ButtonIcons/DownArrow.vue";
 
 import { MoonLoader } from "vue-spinner/dist/vue-spinner.min.js";
 
@@ -46,6 +48,10 @@ const props = defineProps({
         type: String,
         default: null,
     },
+    noUnderline: {
+        type: Boolean,
+        default: false,
+    },
 });
 
 const spinnerColor = computed(() => {
@@ -84,20 +90,24 @@ const classes = computed(() => {
         switch (props.buttonStyle) {
             case "black":
                 classList +=
-                    " bg-transparent text-slate-600 hover:text-slate-700 hover:underline border-transparent";
+                    " bg-transparent text-slate-600 hover:text-slate-700 border-transparent";
                 break;
             case "secondary":
                 classList +=
-                    " bg-transparent text-secondary-500 hover:text-secondary-600 hover:underline border-transparent";
+                    " bg-transparent text-secondary-500 hover:text-secondary-600 border-transparent";
                 break;
             case "tertiary":
                 classList +=
-                    " bg-transparent text-tertiary-500 hover:text-tertiary-600 hover:underline border-transparent";
+                    " bg-transparent text-tertiary-500 hover:text-tertiary-600 border-transparent";
                 break;
             default:
                 classList +=
-                    " bg-transparent text-primary-500 hover:text-primary-600 hover:underline border-transparent";
+                    " bg-transparent text-primary-500 hover:text-primary-600 border-transparent";
                 break;
+        }
+
+        if (!props.noUnderline) {
+            classList += " hover:underline";
         }
     } else {
         switch (props.buttonStyle) {
@@ -142,21 +152,9 @@ const classes = computed(() => {
                 <p>
                     {{ label }}
                 </p>
-                <svg
-                    v-if="icon === 'arrow'"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="2.5"
-                    stroke="currentColor"
-                    class="w-3 h-3 inline-block ml-2"
-                >
-                    <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
-                    />
-                </svg>
+
+                <RightArrow v-if="icon === 'arrow'" />
+                <DownArrow v-if="icon === 'down-arrow'" />
             </template>
         </button>
         <Link
@@ -172,21 +170,8 @@ const classes = computed(() => {
                     {{ label }}
                 </p>
 
-                <svg
-                    v-if="icon === 'arrow'"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="2.5"
-                    stroke="currentColor"
-                    class="w-3 h-3 inline-block ml-2"
-                >
-                    <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
-                    />
-                </svg>
+                <RightArrow v-if="icon === 'arrow'" />
+                <DownArrow v-if="icon === 'down-arrow'" />
             </template>
         </Link>
     </div>

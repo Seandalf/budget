@@ -1,6 +1,12 @@
-<html>
-    <div>
-        Hi {{ $name }},
-        Here is your password reset link: <a href="{{ $url }}">{{ $url }}</a>
-    </div>
-</html>
+@component('mail::message')
+# Dear {{ $name }}
+ 
+Reset your password using the link below.
+ 
+@component('mail::button', ['url' => $url])
+Reset Password
+@endcomponent
+ 
+Thanks,<br>
+{{ config('app.name') }}
+@endcomponent

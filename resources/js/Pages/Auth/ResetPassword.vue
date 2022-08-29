@@ -32,7 +32,7 @@ const rules = {
 const v$ = useVuelidate(rules, form);
 
 const submit = () => {
-    form.post(route("auth.password.update"), {
+    form.post(route("password.update"), {
         onFinish: () => form.reset("password", "password_confirmation"),
     });
 };
@@ -62,7 +62,8 @@ const submit = () => {
                 label="Confirm password"
                 v-model="form.password_confirmation"
                 :validate="v$.password_confirmation"
-            />>
+                class="mt-4"
+            />
 
             <Button
                 label="Reset password"

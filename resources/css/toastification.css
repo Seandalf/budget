@@ -2,25 +2,33 @@
 
 .Vue-Toastification__toast-body {
     flex: 1;
-    line-height: 20px;
+    line-height: 24px;
     font-size: 14px;
     font-family: "Inter", sans-serif;
-    text-align: center;
-    font-weight: 400;
+    text-align: left;
+    font-weight: 500;
 }
 
 .Vue-Toastification__toast--error {
-    background-color: #dc2626;
+    background-color: #fff;
+    color: #b91c1c;
 }
 
 .Vue-Toastification__toast--success {
-    background-color: #16a34a;
+    background-color: #fff;
+    color: #16a34a;
 }
 
 .Vue-Toastification__toast--warning {
-    background-color: #f59e0b;
+    background-color: #fff;
+    color: #f59e0b;
 }
 
 .Vue-Toastification__toast--info {
-    background-color: #0284c7;
+    background-color: #fff;
+    color: #0284c7;
+}
+
+.Vue-Toastification__close-button {
+    color: #64748b;
 }

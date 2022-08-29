@@ -116,7 +116,7 @@ class RoleSeeder extends Seeder
                         'restore-transaction',
                     ]);
                     break;
-                case 'free customer':
+                case 'free-customer':
                     $role->assignPermissions([
                         'create-budget',
                         'update-budget',

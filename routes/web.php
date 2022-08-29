@@ -28,12 +28,10 @@ Route::name('web.')->group(function () {
     })->middleware(['auth', 'verified'])->name('dashboard');
 });
 
-Route::get('/testing/{name}', function ($name) {
-    $perm = App\Models\Permissions\Permission::with('audits')->find(28);
-
-    $perm->name = strrev($perm->name);
-    $perm->save();
-    dd('here');
+Route::get('/mailable', function () {
+    $user = App\Models\User::find(1);
+ 
+    return new App\Mail\Auth\ResetPasswordMailable('http://example.com', $user->first_name);
 });
 
 require __DIR__.'/auth.php';

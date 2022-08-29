@@ -47,7 +47,7 @@ const rules = {
 const v$ = useVuelidate(rules, form);
 
 const submit = () => {
-    form.post(route("register"), {
+    form.post(route("auth.register.store"), {
         onFinish: () => form.reset("password", "password_confirmation"),
     });
 };

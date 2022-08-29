@@ -10,6 +10,7 @@ import Button from "@/Components/Button.vue";
 import CheckboxInput from "@/Components/Input/CheckboxInput.vue";
 import Errors from "@/Components/Errors.vue";
 import TextInput from "@/Components/Input/TextInput.vue";
+import ToastText from "@/Components/ToastText.vue";
 
 defineProps({
     canResetPassword: Boolean,
@@ -40,7 +41,10 @@ const submit = () => {
     form.post(route("auth.login.store"), {
         onFinish: () => {
             for (const error in form.errors) {
-                toast.error(form.errors[error]);
+                toast.error({
+                    component: ToastText,
+                    props: { type: "error", message: form.errors[error] },
+                });
             }
         },
     });
