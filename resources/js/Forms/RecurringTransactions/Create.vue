@@ -104,20 +104,6 @@ const timePeriodOptions = computed(() => {
     return options;
 });
 
-const currencyOptions = computed(() => {
-    const currencies = usePage().props.value.currencies;
-    let options = [];
-
-    for (const currency in currencies) {
-        options.push({
-            name: currencies[currency].name,
-            value: currencies[currency].id,
-        });
-    }
-
-    return options;
-});
-
 const selectedTimePeriodName = computed(() => {
     if (isEmpty(form.time_period_id)) {
         return null;
