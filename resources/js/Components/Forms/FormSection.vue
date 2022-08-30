@@ -18,7 +18,7 @@ defineProps({
 </script>
 
 <template>
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div class="col-span-1 py-2">
             <h6
                 v-if="!isEmpty(heading)"
@@ -32,7 +32,7 @@ defineProps({
         </div>
 
         <div class="col-span-1 lg:col-span-2">
-            <div class="w-full rounded-lg shadow bg-white overflow-hidden">
+            <div class="w-full rounded-lg shadow bg-white">
                 <div class="p-6">
                     <slot />
                 </div>

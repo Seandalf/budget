@@ -1,7 +1,12 @@
 import { usePage } from "@inertiajs/inertia-vue3";
 
 export function isEmpty(obj) {
-    return obj === null || typeof obj === "undefined" || obj === "";
+    return (
+        obj === "undefined" ||
+        obj === null ||
+        typeof obj === "undefined" ||
+        obj === ""
+    );
 }
 
 export function userHasPermission(permission) {
@@ -12,4 +17,8 @@ export function userHasPermission(permission) {
     }
 
     return permissions.includes(permission);
+}
+
+export function capitalise(string) {
+    return string[0].toUpperCase() + string.substring(1);
 }

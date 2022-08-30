@@ -5,7 +5,7 @@
         viewBox="0 0 24 24"
         stroke-width="2.5"
         stroke="currentColor"
-        class="w-3 h-3 inline-block ml-2"
+        class="w-3 h-3 inline-block ml-2 transition ease-in-out duration-300 group-hover:translate-x-[3px]"
     >
         <path
             stroke-linecap="round"

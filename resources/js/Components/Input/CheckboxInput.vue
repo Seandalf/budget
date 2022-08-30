@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from "vue";
 
-const emit = defineEmits(["update:checked"]);
+const emit = defineEmits(["update:checked", "update:modelValue"]);
 
 const props = defineProps({
     label: {
@@ -12,8 +12,12 @@ const props = defineProps({
         type: [Array, Boolean],
         default: false,
     },
-    value: {
+    modelValue: {
         default: null,
+    },
+    disabled: {
+        type: Boolean,
+        default: false,
     },
 });
 
@@ -28,7 +32,9 @@ const proxyChecked = computed({
         return props.checked;
     },
     set(val) {
+        console.log(val);
         emit("update:checked", val);
+        emit("update:modelValue", val);
     },
 });
 </script>
@@ -38,10 +44,11 @@ const proxyChecked = computed({
         <input
             id="uniqueName"
             type="checkbox"
-            :value="value"
+            :value="modelValue"
             v-model="proxyChecked"
             ref="input"
-            class="text-primary-500 rounded border-slate-300 ring-primary-500 outline-primary-500"
+            :disabled="disabled"
+            class="text-primary-500 rounded border-slate-300 ring-primary-500 outline-primary-500 disabled:bg-slate-50"
         />
         <label
             v-if="label"

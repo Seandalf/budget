@@ -64,7 +64,7 @@ const spinnerColor = computed(() => {
 
 const classes = computed(() => {
     const defaultClasses =
-        "rounded-lg text-sm tracking-wide py-2.5 px-4 border transition ease-in-out flex items-center justify-center";
+        "rounded-lg text-sm tracking-wide py-2.5 px-4 border transition ease-in-out flex items-center justify-center group";
     let classList = defaultClasses;
 
     if (props.outline) {

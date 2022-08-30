@@ -51,7 +51,7 @@ class BudgetController extends Controller
             'currencies' => Currency::all(),
             'payees' => Payee::whereUserId(Auth::id())->orWhereNull('user_id')->get(),
             'categories' => Category::whereUserId(Auth::id())->orWhereNull('user_id')->get(),
-            'time_periods' => TimePeriod::all(),
+            'timePeriods' => TimePeriod::all(),
         ]);
     }
 

@@ -7,7 +7,10 @@ import { InertiaProgress } from "@inertiajs/progress";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { ZiggyVue } from "../../vendor/tightenco/ziggy/dist/vue.m";
 import Toast from "vue-toastification";
+import VCalendar from "v-calendar";
+import Cleave from "vue-cleave-component";
 import "../css/toastification.css";
+import "v-calendar/dist/style.css";
 
 const appName =
     window.document.getElementsByTagName("title")[0]?.innerText || "Laravel";
@@ -28,6 +31,8 @@ createInertiaApp({
                 icon: false,
                 timeout: 10000,
             })
+            .use(VCalendar, {})
+            .use(Cleave)
             .mount(el);
     },
 });

@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, computed } from "vue";
+import { onMounted, ref, computed, reactive } from "vue";
 
 const emit = defineEmits(["update:modelValue"]);
 
@@ -12,19 +12,11 @@ const props = defineProps({
         type: String,
         default: null,
     },
-    type: {
-        type: String,
-        default: "text",
-    },
     validate: {
         type: Object,
         default: null,
     },
     disabled: {
-        type: Boolean,
-        default: false,
-    },
-    small: {
         type: Boolean,
         default: false,
     },
@@ -47,6 +39,7 @@ const hasValidate = computed(() => {
 });
 
 const input = ref(null);
+const values = reactive({ value: null });
 
 const onInput = (event) => {
     emit("update:modelValue", event.target.value);
@@ -62,11 +55,12 @@ const uniqueName = computed(() => {
     return (Math.random() + 1).toString(36).substring(7);
 });
 
-onMounted(() => {
-    if (input.value.hasAttribute("autofocus")) {
-        input.value.focus();
-    }
-});
+const options = {
+    numeral: true,
+    noImmediatePrefix: true,
+    rawValueTrimPrefix: true,
+    numeralDecimalScale: 2,
+};
 </script>
 
 <template>
@@ -78,13 +72,15 @@ onMounted(() => {
         >
             {{ label }}
         </label>
-        <input
+        <cleave
             :id="uniqueName"
-            :type="type"
+            type="text"
             ref="input"
+            :options="options"
+            v-model="values.value"
             :disabled="disabled"
             :placeholder="placeholder"
-            class="mt-2 appearance-none border-0 text-slate-900 bg-white rounded-md block w-full px-3 shadow-sm text-sm focus:outline-none placeholder:text-slate-400 focus:ring-2 focus:ring-primary-500 ring-1 ring-slate-200 h-9 disabled:bg-slate-50"
+            class="mt-2 appearance-none h-9 border-0 text-slate-900 bg-white rounded-md block w-full px-3 shadow-sm sm:text-sm focus:outline-none placeholder:text-slate-400 focus:ring-2 focus:ring-primary-500 ring-1 ring-slate-200 disabled:bg-slate-50"
             :class="{
                 'ring-red-500':
                     hasValidate && validate.$dirty && validate.$invalid,

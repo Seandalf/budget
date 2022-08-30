@@ -58,7 +58,7 @@ const hasBudgets = computed(() => {
                 </h1>
 
                 <h6
-                    class="text-white text-center mt-4 opacity-90 font-medium font-title"
+                    class="text-white text-center mt-4 opacity-90 font-medium font-title hidden lg:block"
                 >
                     Welcome, {{ user.first_name }}!
                 </h6>
