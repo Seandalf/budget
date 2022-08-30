@@ -2,14 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreBudgetRequest;
-use App\Http\Requests\UpdateBudgetRequest;
+use Exception;
+use Carbon\Carbon;
+use Inertia\Inertia;
 use App\Models\Budget;
 use App\Models\Interval;
-use Carbon\Carbon;
 use Carbon\CarbonPeriod;
-use Exception;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\StoreBudgetRequest;
+use App\Http\Requests\UpdateBudgetRequest;
+use App\Models\Category;
+use App\Models\Currency;
+use App\Models\Payee;
+use App\Models\TimePeriod;
 
 class BudgetController extends Controller
 {
@@ -30,11 +35,9 @@ class BudgetController extends Controller
      */
     public function index()
     {
-        try {
-            return successResponse(Budget::all());
-        } catch (Exception $e) {
-            return errorResponse($e->getMessage(), 'Could not view all budget');
-        }
+        return Inertia::render('Budgets/viewAll', [
+            'budgets' => Auth::user()->budgets,
+        ]);
     }
 
     /**
@@ -44,6 +47,12 @@ class BudgetController extends Controller
      */
     public function create()
     {
+        return Inertia::render('Budgets/Create', [
+            'currencies' => Currency::all(),
+            'payees' => Payee::whereUserId(Auth::id())->orWhereNull('user_id')->get(),
+            'categories' => Category::whereUserId(Auth::id())->orWhereNull('user_id')->get(),
+            'time_periods' => TimePeriod::all(),
+        ]);
     }
 
     /**

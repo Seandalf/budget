@@ -81,6 +81,10 @@ const classes = computed(() => {
                 classList +=
                     " font-semibold bg-transparent hover:bg-tertiary-600 text-tertiary-600 hover:text-white border-tertiary-500/20 hover:border-tertiary-600";
                 break;
+            case "success":
+                classList +=
+                    " font-semibold bg-transparent hover:bg-green-600 text-green-600 hover:text-white border-green-500/20 hover:border-green-600";
+                break;
             default:
                 classList +=
                     " font-semibold bg-transparent text-primary-600 border-primary-500/20 hover:border-primary-500";
@@ -99,6 +103,10 @@ const classes = computed(() => {
             case "tertiary":
                 classList +=
                     " bg-transparent text-tertiary-500 hover:text-tertiary-600 border-transparent";
+                break;
+            case "tertiary":
+                classList +=
+                    " bg-transparent text-green-500 hover:text-green-600 border-transparent";
                 break;
             default:
                 classList +=
@@ -122,6 +130,10 @@ const classes = computed(() => {
             case "tertiary":
                 classList +=
                     " font-semibold bg-tertiary-500 hover:bg-tertiary-600 text-white border-tertiary-500 hover:border-tertiary-600";
+                break;
+            case "success":
+                classList +=
+                    " font-semibold bg-green-500 hover:bg-green-600 text-white border-green-500 hover:border-green-600";
                 break;
             default:
                 classList +=

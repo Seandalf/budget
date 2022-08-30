@@ -6,6 +6,8 @@ import { userHasPermission } from "@/helpers";
 import Button from "@/Components/Button.vue";
 import SidebarButton from "@/Components/SidebarButton.vue";
 
+const user = usePage().props.value.auth.user;
+
 const menus = reactive({
     mobile: {
         sidebar: {
@@ -55,6 +57,12 @@ const hasBudgets = computed(() => {
                     Open Budget
                 </h1>
 
+                <h6
+                    class="text-white text-center mt-4 opacity-90 font-medium font-title"
+                >
+                    Welcome, {{ user.first_name }}!
+                </h6>
+
                 <div class="mt-8 flex flex-col gap-1">
                     <SidebarButton
                         label="Dashboard"
@@ -64,7 +72,7 @@ const hasBudgets = computed(() => {
 
                     <SidebarButton
                         label="Budgets"
-                        :href="route('web.dashboard')"
+                        :href="route('web.budgets.index')"
                         icon="currency"
                     />
 
@@ -126,10 +134,8 @@ const hasBudgets = computed(() => {
             <main
                 class="flex-1 bg-slate-100 rounded-t-xl lg:rounded-tr-none lg:rounded-l-xl shadow-[-5px_0px_15px_-3px_rgba(0,0,0,0.3)] p-10"
             >
-                <div
-                    class="pb-4 border-b border-slate-200 mb-8 grid grid-cols-2 items-center px-4"
-                >
-                    <div class="col-span-1">
+                <div class="pb-4 border-b border-slate-200 mb-12 px-4">
+                    <div>
                         <slot name="header" />
                     </div>
                 </div>

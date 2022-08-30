@@ -2,34 +2,41 @@
 import { computed } from "vue";
 import AuthenticatedLayout from "@/Layouts/Authenticated.vue";
 import { Head, usePage } from "@inertiajs/inertia-vue3";
+import { userHasPermission } from "@/helpers";
 
 import Button from "@/Components/Button.vue";
+import FormSection from "@/Components/Forms/FormSection.vue";
 
-const hasBudgets = computed(() => {
-    return usePage().props.value.auth.total_budgets > 0;
+const hasBudgetLimit = computed(() => {
+    return (
+        usePage().props.value.auth.total_budgets === 1 &&
+        !userHasPermission("multple-budgets")
+    );
 });
+
+const budgets = computed(() => usePage().props.value.budgets);
 </script>
 
 <template>
-    <Head title="Dashboard" />
+    <Head title="Create Budget" />
 
     <AuthenticatedLayout>
         <template #header>
             <h2
                 class="font-semibold font-title text-2xl text-gray-800 leading-tight"
             >
-                Dashboard
+                Create Budget
                 <span
                     class="text-sm tracking-wide font-normal font-sans text-slate-400 ml-2"
                 >
-                    An overview of your budgets
+                    Create a new budget
                 </span>
             </h2>
         </template>
 
-        <div v-if="!hasBudgets" class="text-center w-full">
+        <div v-if="budgets.length === 0" class="text-center w-full">
             <img
-                src="/img/splash/undraw_blank_canvas.svg"
+                src="/img/splash/undraw_lost.svg"
                 class="w-full max-w-[200px] mx-auto"
             />
 
@@ -47,7 +54,7 @@ const hasBudgets = computed(() => {
 
                 <div class="flex-0">
                     <Button
-                        label="Create budget"
+                        label="Create Budget"
                         :href="route('web.budgets.create')"
                         type="link"
                         buttonStyle="black"
