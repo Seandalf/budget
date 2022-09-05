@@ -4,6 +4,7 @@ import { Link } from "@inertiajs/inertia-vue3";
 
 import RightArrow from "@/Components/ButtonIcons/RightArrow.vue";
 import DownArrow from "@/Components/ButtonIcons/DownArrow.vue";
+import Plus from "@/Components/ButtonIcons/Plus.vue";
 
 import { MoonLoader } from "vue-spinner/dist/vue-spinner.min.js";
 
@@ -85,6 +86,10 @@ const classes = computed(() => {
                 classList +=
                     " font-semibold bg-transparent hover:bg-green-600 text-green-600 hover:text-white border-green-500/20 hover:border-green-600";
                 break;
+            case "error":
+                classList +=
+                    " font-semibold bg-transparent hover:bg-red-600 text-red-600 hover:text-white border-red-500/20 hover:border-red-600";
+                break;
             default:
                 classList +=
                     " font-semibold bg-transparent text-primary-600 border-primary-500/20 hover:border-primary-500";
@@ -104,9 +109,13 @@ const classes = computed(() => {
                 classList +=
                     " bg-transparent text-tertiary-500 hover:text-tertiary-600 border-transparent";
                 break;
-            case "tertiary":
+            case "success":
                 classList +=
                     " bg-transparent text-green-500 hover:text-green-600 border-transparent";
+                break;
+            case "error":
+                classList +=
+                    " bg-transparent text-red-500 hover:text-red-600 border-transparent";
                 break;
             default:
                 classList +=
@@ -135,6 +144,10 @@ const classes = computed(() => {
                 classList +=
                     " font-semibold bg-green-500 hover:bg-green-600 text-white border-green-500 hover:border-green-600";
                 break;
+            case "error":
+                classList +=
+                    " font-semibold bg-red-500 hover:bg-red-600 text-white border-red-500 hover:border-red-600";
+                break;
             default:
                 classList +=
                     " font-semibold bg-primary-500 hover:bg-primary-600 text-white border-primary-500 hover:border-primary-600";
@@ -155,18 +168,17 @@ const classes = computed(() => {
 </script>
 
 <template>
-    <div>
+    <div :class="{ 'pointer-events-none': disabled }">
         <button v-if="type === 'button'" :class="classes">
             <template v-if="loading">
                 <MoonLoader :color="spinnerColor" size="20px"></MoonLoader>
             </template>
             <template v-else>
-                <p>
-                    {{ label }}
-                </p>
+                <p v-html="label"></p>
 
                 <RightArrow v-if="icon === 'arrow'" />
                 <DownArrow v-if="icon === 'down-arrow'" />
+                <Plus v-if="icon === 'plus'" />
             </template>
         </button>
         <Link
@@ -184,6 +196,7 @@ const classes = computed(() => {
 
                 <RightArrow v-if="icon === 'arrow'" />
                 <DownArrow v-if="icon === 'down-arrow'" />
+                <Plus v-if="icon === 'plus'" />
             </template>
         </Link>
     </div>

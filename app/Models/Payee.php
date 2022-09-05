@@ -15,6 +15,7 @@ class Payee extends Model
     protected $fillable = [
         'name',
         'budget_id',
+        'user_id',
     ];
 
     public function budget(): BelongsTo

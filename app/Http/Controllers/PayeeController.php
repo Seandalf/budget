@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
+use App\Models\Payee;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StorePayeeRequest;
 use App\Http\Requests\UpdatePayeeRequest;
-use App\Models\Payee;
-use Exception;
 
 class PayeeController extends Controller
 {
@@ -52,7 +53,9 @@ class PayeeController extends Controller
     public function store(StorePayeeRequest $request)
     {
         try {
-            $payee = Payee::create($request->validated());
+            $data = $request->validated();
+            $data['user_id'] = Auth::id();
+            $payee = Payee::create($data);
 
             return successResponse($payee);
         } catch (Exception $e) {

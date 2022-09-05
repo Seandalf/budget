@@ -6,6 +6,7 @@ use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 use App\Models\Category;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 
 class CategoryController extends Controller
 {
@@ -52,7 +53,9 @@ class CategoryController extends Controller
     public function store(StoreCategoryRequest $request)
     {
         try {
-            $category = Category::create($request->validated());
+            $data = $request->validated();
+            $data['user_id'] = Auth::id();
+            $category = Category::create($data);
 
             return successResponse($category);
         } catch (Exception $e) {

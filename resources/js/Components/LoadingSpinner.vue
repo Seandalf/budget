@@ -21,8 +21,10 @@ defineProps({
         @scroll.prevent
     >
         <div class="w-full h-full flex items-center justify-center flex-col">
-            <MoonLoader :loading="true" color="#0ea5e9"></MoonLoader>
-            <p v-if="label" class="mt-3 text-sm font-sans">{{ label }}</p>
+            <MoonLoader :loading="true" color="#1E3A8A"></MoonLoader>
+            <p v-if="label" class="mt-3 text-sm font-title text-secondary-500">
+                {{ label }}
+            </p>
         </div>
     </div>
 </template>

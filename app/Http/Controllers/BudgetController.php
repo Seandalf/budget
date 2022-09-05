@@ -65,7 +65,16 @@ class BudgetController extends Controller
     {
         try {
             $data = $request->validated();
-            $data['user_id'] = Auth::id();
+            $user = Auth::user();
+            $data['user_id'] = $user->id;
+
+            $intervals_validation = $this->checkFutureIntervals($user, $data);
+            if (!$intervals_validation['valid']) {
+                return response()->json([
+                    'message' => $intervals_validation['message']
+                ])->setStatusCode(422);
+            }
+
             $budget = Budget::create($data);
 
             $periods = $budget->intervalPeriods();
@@ -193,5 +202,116 @@ class BudgetController extends Controller
         } catch (Exception $e) {
             return errorResponse($e->getMessage(), 'Could not delete budget');
         }
+    }
+
+    protected function checkFutureIntervals($user, $data)
+    {
+        if ($user->hasPermission('budget-9')) {
+            $time_period = TimePeriod::find($data['time_period_id']);
+
+            switch ($time_period->name) {
+                case 'daily':
+                    $limit = 273;
+                    break;
+                case 'weekly':
+                    $limit = 39;
+                    break;
+                case 'monthly':
+                    $limit = 9;
+                    break;
+                case 'yearly':
+                    $limit = 0;
+                    break;
+                case 'day':
+                    $limit = floor(273 / $data['time_period_amount']);
+                    break;
+                case 'week':
+                    $limit = floor(39 / $data['time_period_amount']);
+                    break;
+                case 'month':
+                    $limit = floor(9 / $data['time_period_amount']);
+                    break;
+                case 'year':
+                    $limit = 0;
+                    break;
+            }
+
+            $message = 'Cannot go more than 9 months into the future';
+        }
+        if ($user->hasPermission('budget-12')) {
+            $time_period = TimePeriod::find($data['time_period_id']);
+
+            switch ($time_period->name) {
+                case 'daily':
+                    $limit = 366;
+                    break;
+                case 'weekly':
+                    $limit = 52;
+                    break;
+                case 'monthly':
+                    $limit = 12;
+                    break;
+                case 'yearly':
+                    $limit = 1;
+                    break;
+                case 'day':
+                    $limit = floor(366 / $data['time_period_amount']);
+                    break;
+                case 'week':
+                    $limit = floor(52 / $data['time_period_amount']);
+                    break;
+                case 'month':
+                    $limit = floor(12 / $data['time_period_amount']);
+                    break;
+                case 'year':
+                    $limit = 1;
+                    break;
+            }
+
+            $message = 'Cannot go more than 12 months into the future';
+        }
+        if ($user->hasPermission('budget-unlimited')) {
+            $time_period = TimePeriod::find($data['time_period_id']);
+
+            switch ($time_period->name) {
+                case 'daily':
+                    $limit = 365 + 366;
+                    break;
+                case 'weekly':
+                    $limit = 104;
+                    break;
+                case 'monthly':
+                    $limit = 24;
+                    break;
+                case 'yearly':
+                    $limit = 2;
+                    break;
+                case 'day':
+                    $limit = floor(731 / $data['time_period_amount']);
+                    break;
+                case 'week':
+                    $limit = floor(104 / $data['time_period_amount']);
+                    break;
+                case 'month':
+                    $limit = floor(24 / $data['time_period_amount']);
+                    break;
+                case 'year':
+                    $limit = 2;
+                    break;
+            }
+
+            $message = 'Cannot go more than 2 years into the future';
+        }
+
+        if ($data['future_intervals'] > $limit) {
+            return [
+                'valid' => false,
+                'message' => $message,
+            ];
+        }
+
+        return [
+            'valid' => true,
+        ];
     }
 }

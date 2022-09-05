@@ -9,6 +9,7 @@ use App\Models\GroupTransaction;
 use App\Models\Interval;
 use App\Models\RecurringTransaction;
 use App\Models\Transaction;
+use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Exception;
 use Illuminate\Support\Facades\Auth;
@@ -58,24 +59,27 @@ class RecurringTransactionController extends Controller
     public function store(StoreRecurringTransactionRequest $request)
     {
         try {
-            $recurringTransaction = RecurringTransaction::create($request->validated());
+            $data = $request->validated();
+            $data['user_id'] = Auth::id();
+            $recurringTransaction = RecurringTransaction::create($data);
             $budget = $recurringTransaction->budget;
             $intervals = $budget->intervals;
 
-            $every = $this->time_period_amount ?? 1;
-            $time_period = parseTimePeriod($this->time_period->name);
+            $every = $recurringTransaction->time_period_amount ?? 1;
+            $time_period = parseTimePeriod($recurringTransaction->time_period->name);
             $ends_at = $recurringTransaction->ends_at ?? Interval::whereBudgetId($budget->id)
-                                                                 ->orderBy('starts_at')
+                                                                 ->orderBy('starts_at', 'desc')
                                                                  ->pluck('ends_at')
                                                                  ->first();
 
             $occurrences = CarbonPeriod::create($recurringTransaction->starts_at, "{$every} {$time_period}", $ends_at)->toArray();
 
             foreach ($occurrences as $occur) {
-                $matching_intervals = array_filter($intervals, function ($interval) use ($occur) {
-                    return $interval->starts_at <= $occur && $interval->ends_at >= $occur;
+                $matching_intervals = array_filter($intervals->toArray(), function ($interval) use ($occur) {
+                    return Carbon::create($interval['starts_at'])->lte($occur) && Carbon::create($interval['ends_at'])->gte($occur);
                 });
-                $interval = $matching_intervals[0];
+
+                $interval = reset($matching_intervals);
 
                 $transaction_data = [
                     'name' => $recurringTransaction->name,
@@ -83,7 +87,7 @@ class RecurringTransactionController extends Controller
                     'budget' => $recurringTransaction->amount,
                     'type' => $recurringTransaction->transaction_type,
                     'user_id' => Auth::id(),
-                    'interval_id' => $interval->id,
+                    'interval_id' => $interval['id'],
                     'category_id' => $recurringTransaction->category_id,
                     'payee_id' => $recurringTransaction->payee_id,
                     'recurring_transaction_id' => $recurringTransaction->id,
@@ -179,7 +183,7 @@ class RecurringTransactionController extends Controller
                 $every = $this->time_period_amount ?? 1;
                 $time_period = parseTimePeriod($this->time_period->name);
                 $ends_at = $recurringTransaction->ends_at ?? Interval::whereBudgetId($budget->id)
-                                                                     ->orderBy('starts_at')
+                                                                     ->orderBy('starts_at', 'desc')
                                                                      ->pluck('ends_at')
                                                                      ->first();
 
@@ -190,10 +194,11 @@ class RecurringTransactionController extends Controller
                         continue;
                     }
 
-                    $matching_intervals = array_filter($intervals, function ($interval) use ($occur) {
-                        return $interval->starts_at <= $occur && $interval->ends_at >= $occur;
+                    $matching_intervals = array_filter($intervals->toArray(), function ($interval) use ($occur) {
+                        return Carbon::create($interval['starts_at'])->lte($occur) && Carbon::create($interval['ends_at'])->gte($occur);
                     });
-                    $interval = $matching_intervals[0];
+
+                    $interval = reset($matching_intervals);
 
                     $transaction_data = [
                         'name' => $recurringTransaction->name,
@@ -201,7 +206,7 @@ class RecurringTransactionController extends Controller
                         'budget' => $recurringTransaction->amount,
                         'type' => $recurringTransaction->transaction_type,
                         'user_id' => Auth::id(),
-                        'interval_id' => $interval->id,
+                        'interval_id' => $interval['id'],
                         'category_id' => $recurringTransaction->category_id,
                         'payee_id' => $recurringTransaction->payee_id,
                         'recurring_transaction_id' => $recurringTransaction->id,

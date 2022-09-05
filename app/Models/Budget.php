@@ -88,7 +88,7 @@ class Budget extends Model
 
     public function recalculateBalances()
     {
-        $intervals = Interval::whereBudgetId($this->id)->get();
+        $intervals = Interval::whereBudgetId($this->id)->orderBy('starts_at', 'asc')->get();
 
         $last_period = null;
         foreach ($intervals as $interval) {

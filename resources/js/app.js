@@ -9,6 +9,7 @@ import { ZiggyVue } from "../../vendor/tightenco/ziggy/dist/vue.m";
 import Toast from "vue-toastification";
 import VCalendar from "v-calendar";
 import Cleave from "vue-cleave-component";
+import SmartTable from "vuejs-smart-table";
 import "../css/toastification.css";
 import "v-calendar/dist/style.css";
 
@@ -29,10 +30,11 @@ createInertiaApp({
             .use(Toast, {
                 position: "bottom-right",
                 icon: false,
-                timeout: 10000,
+                timeout: 6000,
             })
             .use(VCalendar, {})
             .use(Cleave)
+            .use(SmartTable)
             .mount(el);
     },
 });

@@ -33,10 +33,6 @@ const props = defineProps({
         type: Array,
         default: () => [],
     },
-    expenditureCategoryOptions: {
-        type: Array,
-        default: () => [],
-    },
     payeeOptions: {
         type: Array,
         default: () => [],
@@ -168,16 +164,6 @@ const showCustomInterval = computed(() => {
 
     return periods.includes(form.value.time_period_id);
 });
-
-const categoryOptions = computed(() => {
-    if (isEmpty(form.value.transaction_type)) {
-        return [];
-    }
-
-    return form.value.transaction_type === 1
-        ? props.incomeCategoryOptions
-        : props.expenditureCategoryOptions;
-});
 </script>
 
 <template>
@@ -185,23 +171,22 @@ const categoryOptions = computed(() => {
         <TextInput
             v-model="form.name"
             label="What should we name it?"
-            placeholder="Name your item..."
+            placeholder="Name your salary..."
             :validate="v$.name"
         />
 
         <TextInput
             v-model="form.description"
             label="How should we describe it?"
-            placeholder="Describe your item..."
+            placeholder="Describe your salary..."
             :validate="v$.description"
         />
     </div>
-
     <div class="grid grid-cols-2 xl:grid-cols-6 gap-6 mt-6">
         <CurrencyInput
             v-model="form.amount"
             label="How much is it?"
-            placeholder="Enter item amount..."
+            placeholder="Enter salary amount..."
             :validate="v$.amount"
             :class="{
                 'xl:col-span-3': !showCustomInterval,
@@ -233,52 +218,21 @@ const categoryOptions = computed(() => {
     </div>
 
     <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 mt-6">
-        <SelectInput
-            v-model="form.recurring_transaction_type"
-            label="Is this one payment, or a collection?"
-            placeholder="Choose number of transactions..."
-            :validate="v$.recurring_transaction_type"
-            :options="[
-                { name: 'One payment', value: 1 },
-                { name: 'A collection of payments', value: 2 },
-            ]"
-        />
-
-        <SelectInput
-            v-model="form.transaction_type"
-            label="Is this income or expenditure?"
-            placeholder="Choose payment type..."
-            :validate="v$.transaction_type"
-            :options="[
-                { name: 'Income', value: 1 },
-                { name: 'Expenditure', value: 2 },
-            ]"
-        />
-    </div>
-
-    <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 mt-6">
         <div>
             <SelectInput
                 v-model="form.category_id"
                 label="What category is it part of?"
-                placeholder="Choose category"
+                placeholder="Choose category..."
                 :validate="v$.category_id"
-                :options="categoryOptions"
+                :options="incomeCategoryOptions"
                 :disabled="
                     isEmpty(form.transaction_type) ||
-                    categoryOptions.length === 0
+                    incomeCategoryOptions.length === 0
                 "
             />
 
             <p
-                v-if="isEmpty(form.transaction_type)"
-                class="text-xs text-yellow-500 mt-2 ml-1"
-            >
-                Select transaction type
-            </p>
-
-            <p
-                v-else-if="categoryOptions.length === 0"
+                v-if="incomeCategoryOptions.length === 0"
                 class="text-xs text-yellow-500 mt-2 ml-1"
             >
                 No categories found, add some below!
@@ -292,8 +246,8 @@ const categoryOptions = computed(() => {
         <div>
             <SelectInput
                 v-model="form.payee_id"
-                label="Who am I paid from or to?"
-                placeholder="Choose payer/payee..."
+                label="Who pays your salary?"
+                placeholder="Choose payer..."
                 :validate="v$.payee_id"
                 :options="payeeOptions"
                 :disabled="payeeOptions.length === 0"
@@ -303,11 +257,11 @@ const categoryOptions = computed(() => {
                 v-if="payeeOptions.length === 0"
                 class="text-xs text-yellow-500 mt-2 ml-1"
             >
-                No payees/payers found, add some below!
+                No payers found, add some below!
             </p>
 
             <p v-else class="text-xs text-sky-500 mt-2 ml-1">
-                You can add custom payees below!
+                You can add custom payers below!
             </p>
         </div>
     </div>

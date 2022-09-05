@@ -32,7 +32,6 @@ const proxyChecked = computed({
         return props.checked;
     },
     set(val) {
-        console.log(val);
         emit("update:checked", val);
         emit("update:modelValue", val);
     },

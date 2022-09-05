@@ -7,6 +7,7 @@ use App\Http\Controllers\PayeeController;
 use App\Http\Controllers\RecurringTransactionController;
 use App\Http\Controllers\TransactionController;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -69,6 +70,12 @@ Route::middleware(['auth', 'verified'])->name('web.')->group(function () {
         Route::get('/edit/{transaction}', [TransactionController::class, 'edit'])->name('edit');
         Route::get('/view/{transaction}', [TransactionController::class, 'show'])->name('view');
     });
+});
+
+Route::get('/token', function() {
+    $token = Auth::user()->createToken('default');
+
+    dd($token->plainTextToken);
 });
 
 require __DIR__.'/auth.php';

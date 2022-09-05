@@ -77,6 +77,12 @@ onMounted(() => {
             class="text-sm block font-semibold leading-6 text-gray-900"
         >
             {{ label }}
+            <span
+                v-if="hasValidate && validate.hasOwnProperty('required')"
+                class="text-red-500 font-bold"
+            >
+                *
+            </span>
         </label>
         <input
             :id="uniqueName"

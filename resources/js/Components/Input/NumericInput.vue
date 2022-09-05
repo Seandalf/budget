@@ -60,12 +60,12 @@ const uniqueName = computed(() => {
     return (Math.random() + 1).toString(36).substring(7);
 });
 
-const options = {
-    numeral: true,
-    numeralPositiveOnly: true,
-    noImmediatePrefix: true,
-    rawValueTrimPrefix: true,
-    numeralDecimalScale: 0,
+const onlyNumber = (e) => {
+    let keyCode = e.keyCode ? e.keyCode : e.which;
+    if ((keyCode < 48 || keyCode > 57) && keyCode !== 46) {
+        // 46 is dot
+        e.preventDefault();
+    }
 };
 </script>
 
@@ -77,13 +77,18 @@ const options = {
             class="text-sm block font-semibold leading-6 text-gray-900"
         >
             {{ label }}
+            <span
+                v-if="hasValidate && validate.hasOwnProperty('required')"
+                class="text-red-500 font-bold"
+            >
+                *
+            </span>
         </label>
         <div class="flex items-center mt-2">
-            <cleave
+            <input
                 :id="uniqueName"
                 type="text"
                 ref="input"
-                :options="options"
                 v-model="values.value"
                 :disabled="disabled"
                 :placeholder="placeholder"
@@ -95,6 +100,7 @@ const options = {
                 }"
                 @input="onInput"
                 @blur="touchValidate"
+                @keypress="onlyNumber"
             />
 
             <p

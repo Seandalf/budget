@@ -57,9 +57,15 @@ const uniqueName = computed(() => {
 
 const options = {
     numeral: true,
-    noImmediatePrefix: true,
-    rawValueTrimPrefix: true,
-    numeralDecimalScale: 2,
+    numeralThousandsGroupStyle: "thousand",
+};
+
+const onlyNumber = (e) => {
+    let keyCode = e.keyCode ? e.keyCode : e.which;
+    if ((keyCode < 48 || keyCode > 57) && keyCode !== 46 && keyCode !== 189) {
+        // 46 is dot, 189 is -
+        e.preventDefault();
+    }
 };
 </script>
 
@@ -71,12 +77,17 @@ const options = {
             class="text-sm block font-semibold leading-6 text-gray-900"
         >
             {{ label }}
+            <span
+                v-if="hasValidate && validate.hasOwnProperty('required')"
+                class="text-red-500 font-bold"
+            >
+                *
+            </span>
         </label>
-        <cleave
+        <input
             :id="uniqueName"
             type="text"
             ref="input"
-            :options="options"
             v-model="values.value"
             :disabled="disabled"
             :placeholder="placeholder"
@@ -87,6 +98,7 @@ const options = {
             }"
             @input="onInput"
             @blur="touchValidate"
+            @keypress="onlyNumber"
         />
         <p
             v-if="hasValidate && validate.$dirty && validate.$invalid"

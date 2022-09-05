@@ -24,6 +24,7 @@ class GroupTransaction extends Model
         'actual',
         'type',
         'final',
+        'user_id',
         'interval_id',
         'category_id',
         'payee_id',

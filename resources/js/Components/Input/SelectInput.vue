@@ -68,7 +68,6 @@ const toggleDropdown = () => {
 };
 
 const optionSelected = (event) => {
-    console.log(event);
     if (!props.multiselect) {
         settings.selectedOptions = [];
         settings.selectedValues = [];
@@ -111,19 +110,31 @@ const uniqueName = computed(() => {
             class="text-sm block font-semibold leading-6 text-gray-900"
         >
             {{ label }}
+            <span
+                v-if="hasValidate && validate.hasOwnProperty('required')"
+                class="text-red-500 font-bold"
+            >
+                *
+            </span>
         </label>
 
-        <div class="flex items-center divide-x divide-slate-200 mt-2">
+        <div
+            class="flex items-center divide-x divide-slate-200 mt-2"
+            @click="toggleDropdown"
+        >
             <div
                 class="py-[6px] overflow-x-clip border-0 text-slate-900 bg-white rounded-md rounded-r-none block w-full px-3 shadow-sm sm:text-sm focus:outline-none ring-1 ring-slate-200 h-9 cursor-pointer relative"
-                :class="{ 'rounded-b-none': settings.showDropdown }"
+                :class="{
+                    'rounded-b-none': settings.showDropdown,
+                    'bg-slate-50 pointer-events-none': disabled,
+                }"
             >
                 <p
                     v-if="
                         !isEmpty(placeholder) &&
                         settings.selectedOptions.length === 0
                     "
-                    class="text-[#94A3B8] mt-[3px]"
+                    class="text-[#94A3B8] mt-[3px] truncate"
                 >
                     {{ placeholder }}
                 </p>
@@ -133,6 +144,7 @@ const uniqueName = computed(() => {
                         v-for="(option, index) in settings.selectedOptions"
                         :key="`selected-option-${index}-${option.value}`"
                         class="flex items-center gap-1 px-2 bg-slate-100 text-xs py-[3px] text-slate-600 border-slate-200/80 border rounded"
+                        @click.prevent.stop
                     >
                         <button
                             class="text-primary-500 hover:text-primary-300 flex-0"
@@ -164,9 +176,9 @@ const uniqueName = computed(() => {
                 :class="{
                     'bg-primary-500 text-white ring-primary-600 hover:bg-primary-400 hover:ring-primary-500 rounded-b-none':
                         settings.showDropdown,
-                    'text-slate-500': !settings.showDropdown,
+                    'text-slate-500 bg-white': !settings.showDropdown,
+                    'bg-slate-50 pointer-events-none': disabled,
                 }"
-                @click="toggleDropdown"
             >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"

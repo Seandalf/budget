@@ -18,6 +18,7 @@ class Category extends Model
         'name',
         'type',
         'budget_id',
+        'user_id',
     ];
 
     protected $casts = [

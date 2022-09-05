@@ -11,6 +11,9 @@ module.exports = {
 
     theme: {
         extend: {
+            screens: {
+                "3xl": "1750px",
+            },
             fontFamily: {
                 sans: ["Inter", ...defaultTheme.fontFamily.sans],
                 title: ["Sora", ...defaultTheme.fontFamily.sans],
@@ -31,18 +34,31 @@ module.exports = {
                 //     800: "#1C2735",
                 //     900: "#090C11",
                 // },
+                // primary: {
+                //     DEFAULT: "#1E3A8A",
+                //     50: "#7D97E3",
+                //     100: "#6C8ADF",
+                //     200: "#4B6FD8",
+                //     300: "#2D56CD",
+                //     400: "#2548AC",
+                //     500: "#1E3A8A",
+                //     600: "#14275C",
+                //     700: "#0A132E",
+                //     800: "#000000",
+                //     900: "#000000",
+                // },
                 primary: {
                     DEFAULT: "#1E3A8A",
-                    50: "#7D97E3",
-                    100: "#6C8ADF",
-                    200: "#4B6FD8",
-                    300: "#2D56CD",
-                    400: "#2548AC",
+                    50: "#EEF5FB",
+                    100: "#D1E3F5",
+                    200: "#96BBE8",
+                    300: "#5B8CDB",
+                    400: "#2B5CC5",
                     500: "#1E3A8A",
-                    600: "#14275C",
-                    700: "#0A132E",
-                    800: "#000000",
-                    900: "#000000",
+                    600: "#192A71",
+                    700: "#131C58",
+                    800: "#0E113F",
+                    900: "#080925",
                 },
                 secondary: {
                     DEFAULT: "#3B999B",
@@ -72,6 +88,9 @@ module.exports = {
                 },
                 "paper-white": {
                     DEFAULT: "#e3e4e6",
+                },
+                "card-gray": {
+                    DEFAULT: "#F8F9FD",
                 },
             },
         },

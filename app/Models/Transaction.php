@@ -20,6 +20,7 @@ class Transaction extends Model
         'actual',
         'record_number',
         'type',
+        'user_id',
         'interval_id',
         'category_id',
         'payee_id',

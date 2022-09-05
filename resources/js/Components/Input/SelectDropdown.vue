@@ -24,7 +24,7 @@ const settings = reactive({
 
 const selectOption = (option) => {
     emit("selected", option);
-    console.log(props.multiselect);
+
     if (!props.multiselect) {
         emit("close");
     }

@@ -26,6 +26,7 @@ class RecurringTransaction extends Model
         'recurring_transaction_type',
         'transaction_type',
         'budget_id',
+        'user_id',
         'category_id',
         'payee_id',
         'time_period_id',
@@ -54,6 +55,11 @@ class RecurringTransaction extends Model
     public function payee(): BelongsTo
     {
         return $this->belongsTo(Payee::class);
+    }
+
+    public function time_period(): BelongsTo
+    {
+        return $this->belongsTo(TimePeriod::class);
     }
 
     public function transactions(): HasMany

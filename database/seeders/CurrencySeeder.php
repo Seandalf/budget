@@ -16,11 +16,11 @@ class CurrencySeeder extends Seeder
     public function run()
     {
         Currency::insert([
-            ['name' => 'Australian Dollar', 'shortcode' => 'AUD'],
-            ['name' => 'British Pound', 'shortcode' => 'GBP'],
-            ['name' => 'New Zealand Dollar', 'shortcode' => 'NZD'],
-            ['name' => 'United States Dollar', 'shortcode' => 'USD'],
-            ['name' => 'Euro', 'shortcode' => 'EUR'],
+            ['name' => 'Australian Dollar', 'shortcode' => 'AUD', 'symbol' => '$'],
+            ['name' => 'British Pound', 'shortcode' => 'GBP', 'symbol' => '£'],
+            ['name' => 'New Zealand Dollar', 'shortcode' => 'NZD', 'symbol' => '$'],
+            ['name' => 'United States Dollar', 'shortcode' => 'USD', 'symbol' => '$'],
+            ['name' => 'Euro', 'shortcode' => 'EUR', 'symbol' => '€'],
         ], 'shortcode');
     }
 }

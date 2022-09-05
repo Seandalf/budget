@@ -26,7 +26,7 @@ class UpdateBudgetRequest extends FormRequest
         return [
             'name'               => 'required|string',
             'description'        => 'nullable|string',
-            'future_intervals'   => 'required|numeric|min:6|max:24',
+            'future_intervals'   => 'required|numeric',
             'active'             => 'required|boolean',
         ];
     }
