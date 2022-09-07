@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\TransactionType;
 use App\Traits\Audits\Auditable;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -54,8 +55,57 @@ class Interval extends Model
 
     public function transactionsByCategory(): array
     {
-        // TODO
-        return [];
+        $all_transactions = $this->transactions()->whereNull('group_transaction_id')->with('category')->get();
+        $all_transactions->merge($this->group_transactions()->with('category')->get());
+
+        $all_categories = $this->budget->categories;
+
+        $categories = [
+            'income' => [],
+            'expenditure' => [],
+        ];
+
+        foreach ($all_categories as $category) {
+            $transaction_type = $category['type'] === TransactionType::INCOME ? 'income' : 'expenditure';
+            $categories[$transaction_type][$category['name']] = [
+                'budget' => 0,
+                'actual' => 0,
+                'items'  => []
+            ];
+        }
+
+        foreach ($all_transactions as $transaction) {
+            $transaction_type = $transaction['type'] === TransactionType::INCOME ? 'income' : 'expenditure';
+            $categories[$transaction_type][$transaction['category']['name']]['items'][] = $transaction->toArray();
+        }
+        
+        foreach ($categories['income'] as &$category) {
+            $budget = 0;
+            $actual = 0;
+
+            foreach ($category['items'] as $item) {
+                $budget += $item['budget'];
+                $actual += $item['actual'];
+            }
+
+            $category['budget'] = $budget;
+            $category['actual'] = $actual;
+        }
+        
+        foreach ($categories['expenditure'] as &$category) {
+            $budget = 0;
+            $actual = 0;
+
+            foreach ($category['items'] as $item) {
+                $budget += $item['budget'];
+                $actual += $item['actual'];
+            }
+
+            $category['budget'] = $budget;
+            $category['actual'] = $actual;
+        }
+
+        return $categories;
     }
 
     public function recalculateIncomeExpenditure(): void
@@ -65,11 +115,8 @@ class Interval extends Model
             return;
         }
 
-        $transactions = Transaction::whereIntervalId($this->id)
-                                   ->whereNull('group_transaction_id')
-                                   ->get();
-
-        $group_transactions = GroupTransaction::whereIntervalId($this->id)->get();
+        $transactions = $this->transactions()->whereNull('group_transaction_id')->get();
+        $group_transactions = $this->group_transactions;
 
         $income = 0;
         $expenditure = 0;
@@ -101,5 +148,44 @@ class Interval extends Model
         $this->income = $income;
         $this->expenditure = $expenditure;
         $this->save();
+    }
+
+    public function statistics($category_breakdown)
+    {
+        return [
+            'is_current' => Carbon::create($this->starts_at)->lte(now()) && Carbon::create($this->ends_at)->gte(now()),
+            'current_bank_balance' => $this->current_bank_balance($category_breakdown),
+            'remaining_income' => $this->remaining('income', $category_breakdown),
+            'remaining_expenditure' => $this->remaining('expenditure', $category_breakdown),
+        ];
+    }
+
+    public function current_bank_balance($category_breakdown): int
+    {
+        $actual_income = 0;
+        foreach ($category_breakdown['income'] as $category) {
+            $actual_income += $category['actual'];
+        }
+
+        $actual_spend = 0;
+        foreach ($category_breakdown['expenditure'] as $category) {
+            $actual_spend += $category['actual'];
+        }
+
+        return $this->opening_balance + $actual_income - $actual_spend;
+    }
+
+    public function remaining($type, $category_breakdown): int
+    {
+        $remaining = 0;
+        foreach ($category_breakdown[$type] as $category) {
+            foreach ($category['items'] as $item) {
+                if (!is_numeric($item['actual'])) {
+                    $remaining += $item['budget'];
+                }
+            }
+        }
+
+        return $remaining;
     }
 }

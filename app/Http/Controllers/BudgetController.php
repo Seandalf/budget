@@ -110,11 +110,9 @@ class BudgetController extends Controller
      */
     public function show(Budget $budget)
     {
-        try {
-            return successResponse($budget);
-        } catch (Exception $e) {
-            return errorResponse($e->getMessage(), 'Could not view budget');
-        }
+        return Inertia::render('Budgets/View', [
+            'budget' => $budget->load('currency', 'time_period'),
+        ]);
     }
 
     /**

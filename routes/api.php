@@ -11,6 +11,7 @@ use App\Models\Permissions\Permission;
 use App\Http\Controllers\PayeeController;
 use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\IntervalController;
 use App\Http\Controllers\Permissions\RoleController;
 use App\Http\Controllers\RecurringTransactionController;
 use App\Http\Controllers\Permissions\PermissionController;
@@ -52,6 +53,11 @@ Route::middleware('auth:sanctum')->name('api.')->group(function () {
         Route::patch('/budgets/update/{budget}', [BudgetController::class, 'update'])->can('update', 'budget')->name('update');
         Route::delete('/budgets/delete/{budget}', [BudgetController::class, 'destroy'])->can('delete', 'budget')->name('delete');
         Route::get('/budgets/show/{budget}', [BudgetController::class, 'show'])->can('view', 'budget')->name('show');
+    });
+
+    // Budgets
+    Route::name('intervals.')->group(function () {
+        Route::get('/budgets/show/{budget}/intervals', [IntervalController::class, 'index'])->can('view', 'budget')->name('index');
     });
 
     // Recurring Transactions
