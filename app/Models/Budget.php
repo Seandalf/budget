@@ -2,15 +2,16 @@
 
 namespace App\Models;
 
-use App\Traits\Audits\Auditable;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Traits\Audits\Auditable;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Budget extends Model
 {
@@ -34,6 +35,8 @@ class Budget extends Model
         'starts_at'       => 'datetime',
         'active'          => 'boolean',
     ];
+
+    protected $appends = ['current_period'];
 
     // Relationships
     public function user(): BelongsTo
@@ -107,5 +110,18 @@ class Budget extends Model
             $interval->closing_balance = $interval->opening_balance + $interval->income - $interval->expenditure;
             $interval->save();
         }
+    }
+
+    protected function currentPeriod(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                foreach ($this->intervals as $interval) {
+                    if (Carbon::create($interval->starts_at)->lte(now()) && Carbon::create($interval->ends_at)->gte(now())) {
+                        return $interval;
+                    }
+                }
+            },
+        );
     }
 }

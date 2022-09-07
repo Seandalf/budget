@@ -17,7 +17,7 @@ module.exports = {
             fontFamily: {
                 sans: ["Inter", ...defaultTheme.fontFamily.sans],
                 title: ["Sora", ...defaultTheme.fontFamily.sans],
-                money: ["DM Mono", ...defaultTheme.fontFamily.mono],
+                money: ["JetBrains Mono", ...defaultTheme.fontFamily.mono],
                 logo: ["Azedo", ...defaultTheme.fontFamily.sans],
             },
             colors: {

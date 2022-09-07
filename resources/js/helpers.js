@@ -22,3 +22,13 @@ export function userHasPermission(permission) {
 export function capitalise(string) {
     return string[0].toUpperCase() + string.substring(1);
 }
+
+export function convertToCurrency(amount, shortcode) {
+    const formatter = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: shortcode,
+        currencyDisplay: "narrowSymbol",
+    });
+
+    return formatter.format(amount);
+}

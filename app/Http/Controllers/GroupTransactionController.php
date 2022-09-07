@@ -58,6 +58,8 @@ class GroupTransactionController extends Controller
             $interval = Interval::find($data['interval_id']);
             $budget = $interval->budget;
 
+            $data['budget'] = $data['budget'] * 100;
+            $data['actual'] = $data['actual'] * 100;
             $groupTransaction = GroupTransaction::create($data);
 
             $interval->recalculateIncomeExpenditure();
@@ -105,14 +107,28 @@ class GroupTransactionController extends Controller
     public function update(UpdateGroupTransactionRequest $request, GroupTransaction $groupTransaction)
     {
         try {
-            $interval = $groupTransaction->interval;
-            $budget = $interval->budget;
             $data = $request->validated();
-            $updating_amount = $data['amount'] != $groupTransaction->amount;
+            $old_interval = $groupTransaction->interval;
+            $interval = Interval::find($data['interval_id']);
+            $budget = $interval->budget;
+            $updating_amount = $data['actual'] !== $groupTransaction->actual || $data['budget'] !== $groupTransaction->budget;
+            $updating_interval = $data['interval_id'] !== $groupTransaction->interval_id;
+
+            if ($data['actual'] !== $groupTransaction->actual) {
+                $data['actual'] = $data['actual'] * 100;
+            }
+
+            if ($data['budget'] !== $groupTransaction->budget) {
+                $data['budget'] = $data['budget'] * 100;
+            }
 
             $groupTransaction->update($data);
 
-            if ($updating_amount) {
+            if ($updating_amount || $updating_interval) {
+                if ($old_interval) {
+                    $old_interval->recalculateIncomeExpenditure();
+                }
+
                 $interval->recalculateIncomeExpenditure();
                 $budget->recalculateBalances();
             }

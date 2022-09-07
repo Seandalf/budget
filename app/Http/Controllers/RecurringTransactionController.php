@@ -61,7 +61,9 @@ class RecurringTransactionController extends Controller
         try {
             $data = $request->validated();
             $data['user_id'] = Auth::id();
+            $data['amount'] = $data['amount'] * 100;
             $recurringTransaction = RecurringTransaction::create($data);
+
             $budget = $recurringTransaction->budget;
             $intervals = $budget->intervals;
 
@@ -155,6 +157,9 @@ class RecurringTransactionController extends Controller
             $budget = $recurringTransaction->budget;
             $intervals = $budget->intervals;
 
+            if ($updating_amount) {
+                $data['amount'] = $data['amount'] * 100;
+            }
             $recurringTransaction->update($data);
 
             // if updating the amounts, need to update all non-paid transactions

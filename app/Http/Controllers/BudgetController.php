@@ -36,7 +36,7 @@ class BudgetController extends Controller
     public function index()
     {
         return Inertia::render('Budgets/viewAll', [
-            'budgets' => Auth::user()->budgets,
+            'budgets' => Auth::user()->budgets()->with('currency', 'time_period')->get(),
         ]);
     }
 
@@ -64,9 +64,11 @@ class BudgetController extends Controller
     public function store(StoreBudgetRequest $request)
     {
         try {
-            $data = $request->validated();
             $user = Auth::user();
-            $data['user_id'] = $user->id;
+            $data = [
+                ...$request->validated(),
+                'user_id' => $user->id,
+            ];
 
             $intervals_validation = $this->checkFutureIntervals($user, $data);
             if (!$intervals_validation['valid']) {
@@ -74,6 +76,8 @@ class BudgetController extends Controller
                     'message' => $intervals_validation['message']
                 ])->setStatusCode(422);
             }
+
+            $data['opening_balance'] = $data['opening_balance'] * 100;
 
             $budget = Budget::create($data);
 
@@ -219,6 +223,9 @@ class BudgetController extends Controller
                 case 'monthly':
                     $limit = 9;
                     break;
+                    case 'quarterly':
+                        $limit = 3;
+                        break;
                 case 'yearly':
                     $limit = 0;
                     break;
@@ -231,6 +238,9 @@ class BudgetController extends Controller
                 case 'month':
                     $limit = floor(9 / $data['time_period_amount']);
                     break;
+                    case 'quarter':
+                        $limit = floor(3 / $data['time_period_amount']);
+                        break;
                 case 'year':
                     $limit = 0;
                     break;
@@ -251,6 +261,9 @@ class BudgetController extends Controller
                 case 'monthly':
                     $limit = 12;
                     break;
+                    case 'quarterly':
+                        $limit = 4;
+                        break;
                 case 'yearly':
                     $limit = 1;
                     break;
@@ -263,6 +276,9 @@ class BudgetController extends Controller
                 case 'month':
                     $limit = floor(12 / $data['time_period_amount']);
                     break;
+                    case 'quarter':
+                        $limit = floor(4 / $data['time_period_amount']);
+                        break;
                 case 'year':
                     $limit = 1;
                     break;
@@ -283,6 +299,9 @@ class BudgetController extends Controller
                 case 'monthly':
                     $limit = 24;
                     break;
+                    case 'quarterly':
+                        $limit = 8;
+                        break;
                 case 'yearly':
                     $limit = 2;
                     break;
@@ -295,6 +314,9 @@ class BudgetController extends Controller
                 case 'month':
                     $limit = floor(24 / $data['time_period_amount']);
                     break;
+                    case 'quarter':
+                        $limit = floor(8 / $data['time_period_amount']);
+                        break;
                 case 'year':
                     $limit = 2;
                     break;

@@ -59,6 +59,8 @@ class TransactionController extends Controller
             $interval = Interval::find($data['interval_id']);
             $budget = $interval->budget;
 
+            $data['budget'] = $data['budget'] * 100;
+            $data['actual'] = $data['actual'] * 100;
             $transaction = Transaction::create($data);
 
             $interval->recalculateIncomeExpenditure();
@@ -109,6 +111,14 @@ class TransactionController extends Controller
             $old_interval = $updating_interval ? $transaction->interval : null;
             $interval = Interval::find($data['interval_id']);
             $budget = $interval->budget;
+
+            if ($data['actual'] !== $transaction->actual) {
+                $data['actual'] = $data['actual'] * 100;
+            }
+
+            if ($data['budget'] !== $transaction->budget) {
+                $data['budget'] = $data['budget'] * 100;
+            }
 
             $transaction->update($data);
 

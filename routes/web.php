@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HealthCheckController;
 use App\Http\Controllers\PayeeController;
 use App\Http\Controllers\RecurringTransactionController;
@@ -29,7 +30,7 @@ Route::get('/', function () {
 Route::get('/healthcheck', [HealthCheckController::class, 'index']);
 
 Route::middleware(['auth', 'verified'])->name('web.')->group(function () {
-    Route::get('/dashboard', function () { return Inertia::render('Dashboard'); })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Budgets
     Route::name('budgets.')->prefix('/budgets')->group(function () {

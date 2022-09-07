@@ -134,7 +134,7 @@ const hasBudgets = computed(() => {
             <main
                 class="flex-1 bg-slate-100 rounded-t-xl lg:rounded-tr-none lg:rounded-l-xl shadow-[-5px_0px_15px_-3px_rgba(0,0,0,0.3)] p-10 min-h-screen max-h-screen overflow-y-scroll"
             >
-                <div class="pb-4 border-b border-slate-200 mb-12 px-4">
+                <div class="pb-4 border-b border-slate-200 mb-12">
                     <div>
                         <slot name="header" />
                     </div>
