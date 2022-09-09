@@ -6,7 +6,6 @@ import moment from "moment";
 import { useToast } from "vue-toastification";
 
 import AuthenticatedLayout from "@/Layouts/Authenticated.vue";
-import Button from "@/Components/Button.vue";
 import LoadingSpinner from "@/Components/LoadingSpinner.vue";
 import ToastText from "@/Components/ToastText.vue";
 
@@ -17,6 +16,7 @@ const budget = usePage().props.value.budget;
 
 const data = reactive({
     intervals: [],
+    selectedInterval: null,
 });
 
 const settings = reactive({
@@ -60,12 +60,36 @@ const fetchCategoriesByInterval = () => {
         });
 };
 
+const changeInterval = (direction) => {
+    const currentIndex = data.intervals.indexOf(selectedInterval.value);
+    let nextIndex = currentIndex;
+
+    if (direction === "next" && nextIndex !== data.intervals.length - 1) {
+        nextIndex++;
+    }
+
+    if (direction === "previous" && currentIndex > 0) {
+        nextIndex--;
+    }
+
+    data.selectedInterval = data.intervals[nextIndex];
+};
+
 const selectedInterval = computed(() => {
     if (data.intervals.length === 0) {
         return null;
     }
+    data.intervals.find((i) => i.statistics.is_current === true);
+
+    if (!isEmpty(data.selectedInterval)) {
+        return data.selectedInterval;
+    }
 
     return data.intervals.find((i) => i.statistics.is_current === true);
+});
+
+const lastIntervalId = computed(() => {
+    return data.intervals[data.intervals.length - 1].id;
 });
 
 onMounted(() => {
@@ -95,44 +119,16 @@ onMounted(() => {
             label="Loading budget..."
         ></LoadingSpinner>
 
-        <div class="flex items-center gap-4">
-            <div class="flex-1 flex items-center">
-                <Button
-                    v-if="settings.mode === 'interval'"
-                    label="Budget Overview"
-                    buttonStyle="black"
-                    outline
-                    @click="settings.mode = 'overview'"
-                />
-            </div>
-
-            <div
-                v-if="settings.mode === 'interval'"
-                class="flex-1 flex items-center justify-end gap-4"
-            >
-                <Button
-                    v-if="!selectedInterval.statistics.is_first"
-                    label=""
-                    buttonStyle="white"
-                    icon="left-chevron"
-                    @click="previousInterval"
-                />
-
-                <Button
-                    label=""
-                    buttonStyle="white"
-                    icon="right-chevron"
-                    @click="nextInterval"
-                />
-            </div>
-        </div>
-
         <div class="mt-8">
             <IntervalView
                 v-if="
                     settings.mode === 'interval' && data.intervals.length !== 0
                 "
                 :interval="selectedInterval"
+                :lastInterval="selectedInterval.id === lastIntervalId"
+                v-on:overview="settings.mode = 'overview'"
+                v-on:previousInterval="changeInterval('previous')"
+                v-on:nextInterval="changeInterval('next')"
             />
 
             <OverviewView

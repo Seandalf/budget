@@ -12,6 +12,7 @@ module.exports = {
     theme: {
         extend: {
             screens: {
+                "1.5xl": "1465px",
                 "3xl": "1750px",
             },
             fontFamily: {

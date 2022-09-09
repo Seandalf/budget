@@ -5,6 +5,8 @@ import { Link } from "@inertiajs/inertia-vue3";
 import RightArrow from "@/Components/ButtonIcons/RightArrow.vue";
 import DownArrow from "@/Components/ButtonIcons/DownArrow.vue";
 import Plus from "@/Components/ButtonIcons/Plus.vue";
+import RightChevron from "@/Components/ButtonIcons/RightChevron.vue";
+import LeftChevron from "@/Components/ButtonIcons/LeftChevron.vue";
 
 import { MoonLoader } from "vue-spinner/dist/vue-spinner.min.js";
 
@@ -50,6 +52,10 @@ const props = defineProps({
         default: null,
     },
     noUnderline: {
+        type: Boolean,
+        default: false,
+    },
+    labelSrOnly: {
         type: Boolean,
         default: false,
     },
@@ -148,6 +154,10 @@ const classes = computed(() => {
                 classList +=
                     " font-semibold bg-red-500 hover:bg-red-600 text-white border-red-500 hover:border-red-600";
                 break;
+            case "white":
+                classList +=
+                    " bg-white hover:bg-slate-50 text-slate-500 border-slate-200 hover:border-slate-300";
+                break;
             default:
                 classList +=
                     " font-semibold bg-primary-500 hover:bg-primary-600 text-white border-primary-500 hover:border-primary-600";
@@ -174,11 +184,13 @@ const classes = computed(() => {
                 <MoonLoader :color="spinnerColor" size="20px"></MoonLoader>
             </template>
             <template v-else>
-                <p v-html="label"></p>
+                <p :class="{ 'sr-only': labelSrOnly }" v-html="label"></p>
 
                 <RightArrow v-if="icon === 'arrow'" />
                 <DownArrow v-if="icon === 'down-arrow'" />
                 <Plus v-if="icon === 'plus'" />
+                <RightChevron v-if="icon === 'right-chevron'" />
+                <LeftChevron v-if="icon === 'left-chevron'" />
             </template>
         </button>
         <Link
@@ -197,6 +209,8 @@ const classes = computed(() => {
                 <RightArrow v-if="icon === 'arrow'" />
                 <DownArrow v-if="icon === 'down-arrow'" />
                 <Plus v-if="icon === 'plus'" />
+                <RightChevron v-if="icon === 'right-chevron'" />
+                <LeftChevron v-if="icon === 'left-chevron'" />
             </template>
         </Link>
     </div>
