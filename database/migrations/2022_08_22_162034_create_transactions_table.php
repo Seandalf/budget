@@ -25,7 +25,6 @@ return new class extends Migration {
             $table->unsignedBigInteger('category_id');
             $table->unsignedBigInteger('payee_id')->nullable();
             $table->unsignedBigInteger('recurring_transaction_id')->nullable();
-            $table->unsignedBigInteger('group_transaction_id')->nullable();
             $table->timestamp('due_at')->nullable();
             $table->timestamp('paid_at')->nullable();
             $table->timestamps();

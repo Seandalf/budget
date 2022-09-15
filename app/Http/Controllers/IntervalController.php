@@ -34,6 +34,7 @@ class IntervalController extends Controller
     
             return successResponse($final);
         } catch (Exception $e) {
+            dd($e->getTrace());
             return errorResponse($e->getMessage(), 'Could not get budget data');
         }
     }

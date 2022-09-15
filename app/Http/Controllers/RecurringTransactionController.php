@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\RecurringTransactionType;
 use App\Http\Requests\StoreRecurringTransactionRequest;
 use App\Http\Requests\UpdateRecurringTransactionRequest;
 use App\Models\GroupTransaction;
@@ -96,14 +95,7 @@ class RecurringTransactionController extends Controller
                     'due_at' => $occur->toDateString(),
                 ];
 
-                if ($recurringTransaction->recurring_transaction_type === RecurringTransactionType::SINGLE) {
-                    Transaction::create($transaction_data);
-                }
-
-                if ($recurringTransaction->recurring_transaction_type === RecurringTransactionType::GROUP) {
-                    unset($transaction_data['due_at']);
-                    GroupTransaction::create($transaction_data);
-                }
+                Transaction::create($transaction_data);
             }
 
             foreach ($intervals as $interval) {
@@ -218,14 +210,7 @@ class RecurringTransactionController extends Controller
                         'due_at' => $occur->toDateString(),
                     ];
 
-                    if ($recurringTransaction->recurring_transaction_type === RecurringTransactionType::SINGLE) {
-                        Transaction::create($transaction_data);
-                    }
-
-                    if ($recurringTransaction->recurring_transaction_type === RecurringTransactionType::GROUP) {
-                        unset($transaction_data['due_at']);
-                        GroupTransaction::create($transaction_data);
-                    }
+                    Transaction::create($transaction_data);
                 }
             }
 

@@ -43,11 +43,6 @@ class Interval extends Model
         return $this->belongsTo(Budget::class);
     }
 
-    public function group_transactions(): HasMany
-    {
-        return $this->hasMany(GroupTransaction::class);
-    }
-
     public function transactions(): HasMany
     {
         return $this->hasMany(Transaction::class);
@@ -56,49 +51,59 @@ class Interval extends Model
     public function transactionsByCategory(): array
     {
         $all_transactions = $this->transactions()->whereNull('group_transaction_id')->with('category')->get();
-        $all_transactions->merge($this->group_transactions()->with('category')->get());
 
         $all_categories = $this->budget->categories;
 
         $categories = [
-            'income' => [],
-            'expenditure' => [],
+            'income' => [
+                'total' => 0,
+                'items' => [],
+            ],
+            'expenditure' => [
+                'total' => 0,
+                'items' => [],
+            ],
         ];
 
         foreach ($all_categories as $category) {
             $transaction_type = $category['type'] === TransactionType::INCOME ? 'income' : 'expenditure';
-            $categories[$transaction_type][$category['name']] = [
+            $categories[$transaction_type]['items'][$category['name']] = [
                 'budget' => 0,
                 'actual' => 0,
-                'items'  => []
+                'view'   => false,
+                'items'  => [],
             ];
         }
 
         foreach ($all_transactions as $transaction) {
             $transaction_type = $transaction['type'] === TransactionType::INCOME ? 'income' : 'expenditure';
-            $categories[$transaction_type][$transaction['category']['name']]['items'][] = $transaction->toArray();
+            $categories[$transaction_type]['items'][$transaction['category']['name']]['items'][] = $transaction->toArray();
         }
         
-        foreach ($categories['income'] as &$category) {
+        foreach ($categories['income']['items'] as &$category) {
             $budget = 0;
             $actual = 0;
 
             foreach ($category['items'] as $item) {
                 $budget += $item['budget'];
                 $actual += $item['actual'];
+
+                $categories['income']['total'] += $item['actual'] ?? $item['budget'];
             }
 
             $category['budget'] = $budget;
             $category['actual'] = $actual;
         }
         
-        foreach ($categories['expenditure'] as &$category) {
+        foreach ($categories['expenditure']['items'] as &$category) {
             $budget = 0;
             $actual = 0;
 
             foreach ($category['items'] as $item) {
                 $budget += $item['budget'];
                 $actual += $item['actual'];
+
+                $categories['expenditure']['total'] += $item['actual'] ?? $item['budget'];
             }
 
             $category['budget'] = $budget;
@@ -115,25 +120,12 @@ class Interval extends Model
             return;
         }
 
-        $transactions = $this->transactions()->whereNull('group_transaction_id')->get();
-        $group_transactions = $this->group_transactions;
+        $transactions = $this->transactions;
 
         $income = 0;
         $expenditure = 0;
 
         foreach ($transactions as $transaction) {
-            $amount = $transaction->actual ?? $transaction->budget;
-
-            if ($transaction->type === TransactionType::INCOME) {
-                $income += $amount;
-            }
-
-            if ($transaction->type === TransactionType::EXPENDITURE) {
-                $expenditure += $amount;
-            }
-        }
-
-        foreach ($group_transactions as $transaction) {
             $amount = $transaction->actual ?? $transaction->budget;
 
             if ($transaction->type === TransactionType::INCOME) {
@@ -163,12 +155,12 @@ class Interval extends Model
     public function current_bank_balance($category_breakdown): int
     {
         $actual_income = 0;
-        foreach ($category_breakdown['income'] as $category) {
+        foreach ($category_breakdown['income']['items'] as $category) {
             $actual_income += $category['actual'];
         }
 
         $actual_spend = 0;
-        foreach ($category_breakdown['expenditure'] as $category) {
+        foreach ($category_breakdown['expenditure']['items'] as $category) {
             $actual_spend += $category['actual'];
         }
 
@@ -178,7 +170,7 @@ class Interval extends Model
     public function remaining($type, $category_breakdown): int
     {
         $remaining = 0;
-        foreach ($category_breakdown[$type] as $category) {
+        foreach ($category_breakdown[$type]['items'] as $category) {
             foreach ($category['items'] as $item) {
                 if (!is_numeric($item['actual'])) {
                     $remaining += $item['budget'];

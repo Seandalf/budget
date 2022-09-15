@@ -4,7 +4,6 @@ namespace App\Http\Requests;
 
 use App\Enums\TransactionType;
 use Illuminate\Validation\Rules\Enum;
-use App\Enums\RecurringTransactionType;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreRecurringTransactionRequest extends FormRequest
@@ -30,7 +29,6 @@ class StoreRecurringTransactionRequest extends FormRequest
             'name'                       => 'required|string',
             'description'                => 'nullable|string',
             'amount'                     => 'required|numeric|min:0',
-            'recurring_transaction_type' => [new Enum(RecurringTransactionType::class)],
             'transaction_type'           => [new Enum(TransactionType::class)],
             'active'                     => 'required|boolean',
             'budget_id'                  => 'required|exists:budgets,id',

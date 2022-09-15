@@ -3,6 +3,7 @@ import moment from "moment";
 
 import Button from "@/Components/Button.vue";
 import IntervalStatistics from "./IntervalStatistics.vue";
+import IntervalTable from "./IntervalTable.vue";
 
 const emit = defineEmits(["previousInterval", "nextInterval", "overview"]);
 const props = defineProps({
@@ -54,25 +55,30 @@ const props = defineProps({
     </div>
 
     <div class="mt-8">
-        <h4 class="font-title font-bold text-slate-700 text-lg">
-            Period starting:
+        <h4 class="font-bold text-slate-700 text-lg">
+            Period:
             <span class="text-secondary-500">{{
                 moment(interval.starts_at).format("Do MMM YYYY")
             }}</span>
+            <span class="text-sm mx-2 text-slate-400">to</span>
+            <span class="text-secondary-500">{{
+                moment(interval.ends_at).format("Do MMM YYYY")
+            }}</span>
         </h4>
         <p
+            v-if="interval.statistics.is_current"
             class="mt-1 uppercase tracking-wide font-medium text-slate-500 text-xs"
         >
-            {{ moment(interval.starts_at).to(moment(interval.ends_at), true) }}
+            {{ moment().to(moment(interval.ends_at), true) }}
             remaining
         </p>
     </div>
 
-    <div class="mt-6 grid grid-cols-4 gap-10">
-        <div class="col-span-4 1.5xl:col-span-1">
-            <IntervalStatistics :interval="interval" />
-        </div>
+    <div class="mt-8">
+        <IntervalStatistics :interval="interval" />
+    </div>
 
-        <div class="col-span-4 1.5xl:col-span-3">hi</div>
+    <div class="mt-8">
+        <IntervalTable :categories="interval.category_breakdown" />
     </div>
 </template>

@@ -17,7 +17,6 @@ return new class extends Migration {
             $table->string('name', 50);
             $table->string('description', 200)->nullable();
             $table->bigInteger('amount');
-            $table->tinyInteger('recurring_transaction_type');
             $table->tinyInteger('transaction_type');
             $table->boolean('active')->default(true);
             $table->unsignedBigInteger('budget_id');

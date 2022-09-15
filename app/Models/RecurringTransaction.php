@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Enums\RecurringTransactionType;
 use App\Enums\TransactionType;
 use App\Traits\Audits\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -36,7 +35,6 @@ class RecurringTransaction extends Model
     ];
 
     protected $casts = [
-        'recurring_transaction_type' => RecurringTransactionType::class,
         'transaction_type'           => TransactionType::class,
         'starts_at'                  => 'datetime',
         'ends_at'                    => 'datetime',
@@ -64,12 +62,6 @@ class RecurringTransaction extends Model
 
     public function transactions(): HasMany
     {
-        if ($this->recurring_transaction_type === RecurringTransactionType::SINGLE) {
-            return $this->hasMany(Transaction::class);
-        }
-
-        if ($this->recurring_transaction_type === RecurringTransactionType::GROUP) {
-            return $this->hasMany(GroupTransaction::class);
-        }
+        return $this->hasMany(Transaction::class);
     }
 }

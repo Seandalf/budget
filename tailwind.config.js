@@ -16,9 +16,9 @@ module.exports = {
                 "3xl": "1750px",
             },
             fontFamily: {
-                sans: ["Inter", ...defaultTheme.fontFamily.sans],
+                sans: ["Rubik", ...defaultTheme.fontFamily.sans],
                 title: ["Sora", ...defaultTheme.fontFamily.sans],
-                money: ["JetBrains Mono", ...defaultTheme.fontFamily.mono],
+                money: ["Source Code Pro", ...defaultTheme.fontFamily.mono],
                 logo: ["Azedo", ...defaultTheme.fontFamily.sans],
             },
             colors: {
