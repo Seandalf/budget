@@ -79,7 +79,7 @@ class Interval extends Model
             $transaction_type = $transaction['type'] === TransactionType::INCOME ? 'income' : 'expenditure';
             $categories[$transaction_type]['items'][$transaction['category']['name']]['items'][] = $transaction->toArray();
         }
-        
+
         foreach ($categories['income']['items'] as &$category) {
             $budget = 0;
             $actual = 0;
@@ -94,7 +94,7 @@ class Interval extends Model
             $category['budget'] = $budget;
             $category['actual'] = $actual;
         }
-        
+
         foreach ($categories['expenditure']['items'] as &$category) {
             $budget = 0;
             $actual = 0;
@@ -172,7 +172,7 @@ class Interval extends Model
         $remaining = 0;
         foreach ($category_breakdown[$type]['items'] as $category) {
             foreach ($category['items'] as $item) {
-                if (!is_numeric($item['actual'])) {
+                if (! is_numeric($item['actual'])) {
                     $remaining += $item['budget'];
                 }
             }

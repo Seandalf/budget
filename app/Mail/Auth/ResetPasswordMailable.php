@@ -12,6 +12,7 @@ class ResetPasswordMailable extends Mailable
     use Queueable, SerializesModels;
 
     public $url;
+
     public $name;
 
     /**

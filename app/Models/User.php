@@ -4,18 +4,18 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
-use App\Traits\Audits\Auditable;
-use Laravel\Sanctum\HasApiTokens;
-use App\Traits\Permissions\HasRoles;
-use Illuminate\Notifications\Notifiable;
-use App\Traits\Permissions\HasPermissions;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Notifications\Auth\ResetPasswordNotification;
+use App\Traits\Audits\Auditable;
+use App\Traits\Permissions\HasPermissions;
+use App\Traits\Permissions\HasRoles;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
@@ -99,7 +99,6 @@ class User extends Authenticatable
         );
     }
 
-
     /**
      * Send a password reset notification to the user.
      *
@@ -110,8 +109,8 @@ class User extends Authenticatable
     {
         $url = url(route('password.reset', [
             'token' => $token,
-            'email' => $this->email
-        ], false));;
+            'email' => $this->email,
+        ], false));
 
         $this->notify(new ResetPasswordNotification($url, $this->first_name));
     }

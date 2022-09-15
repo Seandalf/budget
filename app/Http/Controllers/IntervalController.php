@@ -19,7 +19,7 @@ class IntervalController extends Controller
 
         try {
             $intervals = $budget->intervals()->orderBy('starts_at', 'asc')->get();
-    
+
             $final = [];
             $i = 0;
             foreach ($intervals as $interval) {
@@ -31,10 +31,11 @@ class IntervalController extends Controller
                 $final[] = $arr;
                 $i++;
             }
-    
+
             return successResponse($final);
         } catch (Exception $e) {
             dd($e->getTrace());
+
             return errorResponse($e->getMessage(), 'Could not get budget data');
         }
     }

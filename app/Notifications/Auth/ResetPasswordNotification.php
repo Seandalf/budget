@@ -13,6 +13,7 @@ class ResetPasswordNotification extends Notification
     use Queueable;
 
     protected $url;
+
     protected $name;
 
     /**

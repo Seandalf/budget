@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use Exception;
-use Carbon\Carbon;
-use Inertia\Inertia;
-use App\Models\Budget;
-use App\Models\Interval;
-use Carbon\CarbonPeriod;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreBudgetRequest;
 use App\Http\Requests\UpdateBudgetRequest;
+use App\Models\Budget;
 use App\Models\Category;
 use App\Models\Currency;
+use App\Models\Interval;
 use App\Models\Payee;
 use App\Models\TimePeriod;
+use Carbon\Carbon;
+use Carbon\CarbonPeriod;
+use Exception;
+use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class BudgetController extends Controller
 {
@@ -71,9 +71,9 @@ class BudgetController extends Controller
             ];
 
             $intervals_validation = $this->checkFutureIntervals($user, $data);
-            if (!$intervals_validation['valid']) {
+            if (! $intervals_validation['valid']) {
                 return response()->json([
-                    'message' => $intervals_validation['message']
+                    'message' => $intervals_validation['message'],
                 ])->setStatusCode(422);
             }
 
@@ -221,9 +221,9 @@ class BudgetController extends Controller
                 case 'monthly':
                     $limit = 9;
                     break;
-                    case 'quarterly':
-                        $limit = 3;
-                        break;
+                case 'quarterly':
+                    $limit = 3;
+                    break;
                 case 'yearly':
                     $limit = 0;
                     break;
@@ -236,9 +236,9 @@ class BudgetController extends Controller
                 case 'month':
                     $limit = floor(9 / $data['time_period_amount']);
                     break;
-                    case 'quarter':
-                        $limit = floor(3 / $data['time_period_amount']);
-                        break;
+                case 'quarter':
+                    $limit = floor(3 / $data['time_period_amount']);
+                    break;
                 case 'year':
                     $limit = 0;
                     break;
@@ -259,9 +259,9 @@ class BudgetController extends Controller
                 case 'monthly':
                     $limit = 12;
                     break;
-                    case 'quarterly':
-                        $limit = 4;
-                        break;
+                case 'quarterly':
+                    $limit = 4;
+                    break;
                 case 'yearly':
                     $limit = 1;
                     break;
@@ -274,9 +274,9 @@ class BudgetController extends Controller
                 case 'month':
                     $limit = floor(12 / $data['time_period_amount']);
                     break;
-                    case 'quarter':
-                        $limit = floor(4 / $data['time_period_amount']);
-                        break;
+                case 'quarter':
+                    $limit = floor(4 / $data['time_period_amount']);
+                    break;
                 case 'year':
                     $limit = 1;
                     break;
@@ -297,9 +297,9 @@ class BudgetController extends Controller
                 case 'monthly':
                     $limit = 24;
                     break;
-                    case 'quarterly':
-                        $limit = 8;
-                        break;
+                case 'quarterly':
+                    $limit = 8;
+                    break;
                 case 'yearly':
                     $limit = 2;
                     break;
@@ -312,9 +312,9 @@ class BudgetController extends Controller
                 case 'month':
                     $limit = floor(24 / $data['time_period_amount']);
                     break;
-                    case 'quarter':
-                        $limit = floor(8 / $data['time_period_amount']);
-                        break;
+                case 'quarter':
+                    $limit = floor(8 / $data['time_period_amount']);
+                    break;
                 case 'year':
                     $limit = 2;
                     break;

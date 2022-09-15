@@ -3,8 +3,8 @@
 namespace App\Http\Requests;
 
 use App\Enums\TransactionType;
-use Illuminate\Validation\Rules\Enum;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
 
 class StoreRecurringTransactionRequest extends FormRequest
 {

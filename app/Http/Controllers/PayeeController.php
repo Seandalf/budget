@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Exception;
-use App\Models\Payee;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StorePayeeRequest;
 use App\Http\Requests\UpdatePayeeRequest;
+use App\Models\Payee;
+use Exception;
+use Illuminate\Support\Facades\Auth;
 
 class PayeeController extends Controller
 {
