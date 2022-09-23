@@ -79,7 +79,6 @@ const selectedInterval = computed(() => {
     if (data.intervals.length === 0) {
         return null;
     }
-    data.intervals.find((i) => i.statistics.is_current === true);
 
     if (!isEmpty(data.selectedInterval)) {
         return data.selectedInterval;

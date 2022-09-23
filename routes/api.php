@@ -70,6 +70,7 @@ Route::middleware('auth:sanctum')->name('api.')->group(function () {
 
     // Categories
     Route::name('categories.')->group(function () {
+        Route::get('/categories/{budget}/index', [CategoryController::class, 'index'])->can('viewAny', Category::class)->name('index');
         Route::put('/categories/create', [CategoryController::class, 'store'])->can('create', Category::class)->name('create');
         Route::patch('/categories/update/{category}', [CategoryController::class, 'update'])->can('update', 'category')->name('update');
         Route::delete('/categories/delete/{category}', [CategoryController::class, 'destroy'])->can('delete', 'category')->name('delete');
@@ -78,6 +79,7 @@ Route::middleware('auth:sanctum')->name('api.')->group(function () {
 
     // Payees
     Route::name('payees.')->group(function () {
+        Route::get('/payees/{budget}/index', [PayeeController::class, 'index'])->can('viewAny', Category::class)->name('index');
         Route::put('/payees/create', [PayeeController::class, 'store'])->can('create', Payee::class)->name('create');
         Route::patch('/payees/update/{payee}', [PayeeController::class, 'update'])->can('update', 'payee')->name('update');
         Route::delete('/payees/delete/{payee}', [PayeeController::class, 'destroy'])->can('delete', 'payee')->name('delete');

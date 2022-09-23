@@ -42,7 +42,11 @@ Route::middleware(['auth', 'verified'])->name('web.')->group(function () {
 
     // Categories
     Route::name('categories.')->prefix('/categories')->group(function () {
-        Route::get('/', [CategoryController::class, 'index'])->name('index');
+        Route::get('/', function () {
+            return Inertia::render('Categories/ViewAll', [
+                'budgets' => Auth::user()->budgets,
+            ]);
+        })->name('index');
         Route::get('/create', [CategoryController::class, 'create'])->name('create');
         Route::get('/edit/{category}', [CategoryController::class, 'edit'])->name('edit');
         Route::get('/view/{category}', [CategoryController::class, 'show'])->name('view');
@@ -50,7 +54,11 @@ Route::middleware(['auth', 'verified'])->name('web.')->group(function () {
 
     // Payees
     Route::name('payees.')->prefix('/payees')->group(function () {
-        Route::get('/', [PayeeController::class, 'index'])->name('index');
+        Route::get('/', function () {
+            return Inertia::render('Payees/ViewAll', [
+                'budgets' => Auth::user()->budgets,
+            ]);
+        })->name('index');
         Route::get('/create', [PayeeController::class, 'create'])->name('create');
         Route::get('/edit/{payee}', [PayeeController::class, 'edit'])->name('edit');
         Route::get('/view/{payee}', [PayeeController::class, 'show'])->name('view');

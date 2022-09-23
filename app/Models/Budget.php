@@ -117,7 +117,7 @@ class Budget extends Model
         return Attribute::make(
             get: function () {
                 foreach ($this->intervals as $interval) {
-                    if (Carbon::create($interval->starts_at)->lte(now()) && Carbon::create($interval->ends_at)->gte(now())) {
+                    if (Carbon::create($interval->starts_at)->lte(now()->startOfDay()) && Carbon::create($interval->ends_at)->gte(now()->startOfDay())) {
                         return $interval;
                     }
                 }

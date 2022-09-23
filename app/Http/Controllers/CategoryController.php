@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
+use App\Models\Budget;
 use App\Models\Category;
+use App\Models\RecurringTransaction;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 
@@ -25,10 +27,16 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Budget $budget)
     {
         try {
-            return successResponse(Category::all());
+            return successResponse(
+                Category::whereBudgetId($budget->id)
+                        ->orderBy('type', 'asc')
+                        ->orderBy('name', 'asc')
+                        ->get()
+                        ->toArray()
+            );
         } catch (Exception $e) {
             return errorResponse($e->getMessage(), 'Could not view all category');
         }
@@ -116,8 +124,40 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         try {
-            if (count($category->transactions) > 0 || count($category->gtransactions) > 0 || count($category->rtransactions) > 0) {
-                throw new Exception('Cannot delete category when it has existing transactions');
+            $transactions = $category->transactions;
+
+            $existing_other_category = Category::whereName('Other')
+                                               ->whereType($category->type)
+                                               ->whereUserId($category->user_id)
+                                               ->whereBudgetId($category->budget_id)
+                                               ->first();
+
+            if (!$existing_other_category) {
+                $existing_other_category = Category::create([
+                    'name' => 'Other',
+                    'type' => $category->type,
+                    'user_id' => $category->user_id,
+                    'budget_id' => $category->budget_id,
+                ]);
+            }
+
+            if (count($transactions) > 0) {
+                $recurring_transaction_ids = [];
+                foreach ($transactions as $transaction) {
+                    $transaction->category_id = $existing_other_category->id;
+                    $transaction->save();
+    
+                    if ($transaction->recurring_transaction_id && !in_array($transaction->recurring_transaction_id, $recurring_transaction_ids)) {
+                        $recurring_transaction_ids[] = $transaction->recurring_transaction_id;
+                    }
+                }
+    
+                $recurring_transactions = RecurringTransaction::whereIn('id', $recurring_transaction_ids)->get();
+    
+                foreach ($recurring_transactions as $transaction) {
+                    $transaction->category_id = $existing_other_category->id;
+                    $transaction->save();
+                }
             }
 
             $category->delete();

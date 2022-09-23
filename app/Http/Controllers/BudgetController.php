@@ -35,7 +35,7 @@ class BudgetController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Budgets/viewAll', [
+        return Inertia::render('Budgets/ViewAll', [
             'budgets' => Auth::user()->budgets()->with('currency', 'time_period')->get(),
         ]);
     }

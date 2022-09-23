@@ -145,7 +145,7 @@ class Interval extends Model
     public function statistics($category_breakdown)
     {
         return [
-            'is_current' => Carbon::create($this->starts_at)->lte(now()) && Carbon::create($this->ends_at)->gte(now()),
+            'is_current' => Carbon::create($this->starts_at)->lte(now()->startOfDay()) && Carbon::create($this->ends_at)->gte(now()->startOfDay()),
             'current_bank_balance' => $this->current_bank_balance($category_breakdown),
             'remaining_income' => $this->remaining('income', $category_breakdown),
             'remaining_expenditure' => $this->remaining('expenditure', $category_breakdown),

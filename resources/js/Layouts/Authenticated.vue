@@ -93,14 +93,14 @@ const hasBudgets = computed(() => {
                     <SidebarButton
                         v-if="hasBudgets"
                         label="Categories"
-                        :href="route('web.dashboard')"
+                        :href="route('web.categories.index')"
                         icon="tag"
                     />
 
                     <SidebarButton
                         v-if="hasBudgets"
                         label="Payees"
-                        :href="route('web.dashboard')"
+                        :href="route('web.payees.index')"
                         icon="person"
                     />
 

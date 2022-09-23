@@ -32,6 +32,7 @@ class Transaction extends Model
     protected $casts = [
         'type'    => TransactionType::class,
         'paid_at' => 'datetime',
+        'due_at'  => 'datetime',
     ];
 
     public function interval(): BelongsTo

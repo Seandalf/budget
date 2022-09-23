@@ -18,6 +18,10 @@ const props = defineProps({
     },
 });
 
+const data = reactive({
+    num: 1,
+});
+
 const form = reactive({
     name: null,
     type: null,
@@ -38,10 +42,26 @@ const v$ = useVuelidate(rules, form);
 const addCategory = () => {
     emit("add", form);
 };
+
+const resetForm = () => {
+    form.name = null;
+    form.type = null;
+    data.num++;
+    v$.value.$reset();
+};
+
+defineExpose({
+    addCategory,
+    resetForm,
+    form,
+});
 </script>
 
 <template>
-    <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+    <div
+        class="grid grid-cols-1 xl:grid-cols-2 gap-6"
+        :key="`create-category-form-${data.num}`"
+    >
         <TextInput
             v-model="form.name"
             label="What should we call this category?"

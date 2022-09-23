@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
+use App\Models\Payee;
+use App\Models\Budget;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StorePayeeRequest;
 use App\Http\Requests\UpdatePayeeRequest;
-use App\Models\Payee;
-use Exception;
-use Illuminate\Support\Facades\Auth;
 
 class PayeeController extends Controller
 {
@@ -25,11 +26,17 @@ class PayeeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Budget $budget)
     {
         try {
-            return successResponse(Payee::all());
+            return successResponse(
+                Payee::whereBudgetId($budget->id)
+                     ->orderBy('name', 'asc')
+                     ->get()
+                     ->toArray()
+            );
         } catch (Exception $e) {
+            dd($e->getMessage());
             return errorResponse($e->getMessage(), 'Could not view all payees');
         }
     }

@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreRecurringTransactionRequest;
 use App\Http\Requests\UpdateRecurringTransactionRequest;
-use App\Models\GroupTransaction;
 use App\Models\Interval;
 use App\Models\RecurringTransaction;
 use App\Models\Transaction;

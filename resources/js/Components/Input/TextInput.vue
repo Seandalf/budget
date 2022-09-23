@@ -62,6 +62,15 @@ const uniqueName = computed(() => {
     return (Math.random() + 1).toString(36).substring(7);
 });
 
+const proxyValue = computed({
+    get() {
+        return props.modelValue;
+    },
+    set(val) {
+        emit("update:modelValue", val);
+    },
+});
+
 onMounted(() => {
     if (input.value.hasAttribute("autofocus")) {
         input.value.focus();
@@ -90,6 +99,7 @@ onMounted(() => {
             ref="input"
             :disabled="disabled"
             :placeholder="placeholder"
+            v-model="proxyValue"
             class="mt-2 appearance-none border-0 text-slate-900 bg-white rounded-md block w-full px-3 shadow-sm text-sm focus:outline-none placeholder:text-slate-400 focus:ring-2 focus:ring-primary-500 ring-1 ring-slate-200 h-9 disabled:bg-slate-50"
             :class="{
                 'ring-red-500':
